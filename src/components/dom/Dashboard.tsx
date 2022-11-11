@@ -8,7 +8,7 @@ type Playlist = {
   id: string,
   name: string,
   description: string,
-  images: { height: number, width: number, url: string }[],
+  images?: { height: number, width: number, url: string }[],
   owner: { id: string }
 }
 

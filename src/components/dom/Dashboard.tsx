@@ -7,6 +7,7 @@ import Image from "next/image";
 type Playlist = {
   id: string,
   name: string,
+  description: string,
   images: { height: number, width: number, url: string }[],
   owner: { id: string }
 }
@@ -41,7 +42,8 @@ export default function Dashboard( props: GroupProps ) {
 
 		return (
 			<div key={playlist.id}>
-				<Image alt="" src={playlist?.images[ 1 ].url}/>
+				<Image alt={playlist.description} src={playlist?.images[ 1 ].url} width={playlist.images[ 1 ].width}
+					height={playlist.images[ 1 ].height}/>
 				{playlist.name}
 			</div>
 		);

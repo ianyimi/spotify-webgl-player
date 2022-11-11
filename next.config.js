@@ -13,7 +13,15 @@ const nextConfig = {
 	//   styledComponents: true,
 	// },
 	experimental: {},
-	images: {},
+	images: {
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "mosaic.scdn.co",
+				port: ""
+			}
+		]
+	},
 	reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.
 	webpack( config, { isServer } ) {
 

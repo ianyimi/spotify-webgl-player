@@ -3,6 +3,7 @@ import Instructions from '@/components/dom/Instructions';
 import Dashboard from '@/components/dom/Dashboard';
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
+import { getProviders } from "next-auth/react";
 
 // Dynamic import is used to prevent a payload when the website starts, that includes threejs, r3f etc..
 // WARNING ! errors might get obfuscated by using dynamic import.
@@ -13,6 +14,7 @@ const Logo = dynamic( () => import( '@/components/canvas/Logo' ), { ssr: false }
 // Dom components go here
 export default function Page( props ) {
 
+	const { providers } = props;
 	return (
 		<div>
 			<Dashboard/>
@@ -27,10 +29,13 @@ Page.canvas = ( props ) => <Logo scale={0.5} route="/blob" position-y={- 1}/>;
 
 export async function getServerSideProps( { req, res } ) {
 
+	const providers = await getProviders();
+
 	return {
 		props: {
 			title: "Spotify WebGl Player",
-			session: await unstable_getServerSession( req, res, authOptions )
+			session: await unstable_getServerSession( req, res, authOptions ),
+			providers
 		}
 	};
 

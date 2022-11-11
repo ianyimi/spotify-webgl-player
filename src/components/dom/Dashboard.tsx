@@ -24,15 +24,41 @@ export default function Dashboard( props: GroupProps ) {
 
 			spotifyApi.getMe().then( ( currentUser ) => {
 
-				spotifyApi.getUserPlaylists( currentUser.body.id, { limit: 50 } ).then( ( newerPlaylists ) => {
+				const id = currentUser.body.id;
+				spotifyApi.getUserPlaylists( id, { limit: 50 } ).then( ( newPlaylists ) => {
 
-					spotifyApi.getUserPlaylists( currentUser.body.id, { limit: 50, offset: 50 } ).then( ( olderPlaylists ) => {
+					const newItems = newPlaylists.body.items;
+					const newUserCreatedPlaylists = newItems.filter( p => p.owner.id === id );
+					if ( newItems.length < 50 ) {
 
-						const newerUserCreatedPlaylists = newerPlaylists.body.items.filter( p => p.owner.id === currentUser.body.id );
-						const olderUserCreatedPlaylists = olderPlaylists.body.items.filter( p => p.owner.id === currentUser.body.id );
-						setPlaylists( newerUserCreatedPlaylists.concat( olderUserCreatedPlaylists ) );
+						setPlaylists( newUserCreatedPlaylists );
 
-					} );
+					} else {
+
+						spotifyApi.getUserPlaylists( id, { limit: 50, offset: 50 } ).then( ( midPlaylists ) => {
+
+							const midItems = midPlaylists.body.items;
+							const midUserCreatedPlaylists = midItems.filter( p => p.owner.id === id );
+							const tempArr = newUserCreatedPlaylists.concat( midUserCreatedPlaylists );
+							if ( midItems.length < 50 ) {
+
+								setPlaylists( tempArr );
+
+							} else {
+
+								spotifyApi.getUserPlaylists( id, { limit: 50, offset: 100 } ).then( ( oldPlaylists ) => {
+
+									const oldItems = oldPlaylists.body.items;
+									const oldUserCreatedPlaylists = oldItems.filter( p => p.owner.id === id );
+									setPlaylists( tempArr.concat( oldUserCreatedPlaylists ) );
+
+								} );
+
+							}
+
+						} );
+
+					}
 
 				} );
 

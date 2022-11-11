@@ -24,10 +24,15 @@ export default function Dashboard( props: GroupProps ) {
 
 			spotifyApi.getMe().then( ( currentUser ) => {
 
-				spotifyApi.getUserPlaylists( currentUser.body.id, { limit: 50 } ).then( ( playlists ) => {
+				spotifyApi.getUserPlaylists( currentUser.body.id, { limit: 50 } ).then( ( newerPlaylists ) => {
 
-					const userCreatedPlaylists = playlists.body.items.filter( p => p.owner.id === currentUser.body.id );
-					setPlaylists( userCreatedPlaylists );
+					spotifyApi.getUserPlaylists( currentUser.body.id, { limit: 50, offset: 50 } ).then( ( olderPlaylists ) => {
+
+						const newerUserCreatedPlaylists = newerPlaylists.body.items.filter( p => p.owner.id === currentUser.body.id );
+						const olderUserCreatedPlaylists = olderPlaylists.body.items.filter( p => p.owner.id === currentUser.body.id );
+						setPlaylists( newerUserCreatedPlaylists.concat( olderUserCreatedPlaylists ) );
+
+					} );
 
 				} );
 
@@ -42,8 +47,9 @@ export default function Dashboard( props: GroupProps ) {
 
 		return (
 			<div key={playlist.id}>
-				<Image alt={playlist.description} src={playlist?.images[ 1 ].url} width={playlist.images[ 1 ].width}
-					height={playlist.images[ 1 ].height}/>
+				{playlist.images && playlist.images.length > 0 &&
+          <Image alt={playlist.description} src={playlist?.images[ 1 ].url} width={playlist.images[ 1 ].width}
+          	height={playlist.images[ 1 ].height}/>}
 				{playlist.name}
 			</div>
 		);

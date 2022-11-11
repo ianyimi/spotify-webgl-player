@@ -49,7 +49,7 @@ export const authOptions = {
 		async jwt( { token, account, user } ) {
 
 			// init signin
-			if ( account && user ) {
+			if ( ( Boolean( account ) ) && ( Boolean( user ) ) ) {
 
 				return {
 					...token,

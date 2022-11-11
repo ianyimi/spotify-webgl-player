@@ -2,12 +2,20 @@ import { GroupProps } from "@react-three/fiber";
 import { useSession, signOut } from "next-auth/react";
 import useSpotify from "@/hooks/useSpotify";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+
+type Playlist = {
+  id: string,
+  name: string,
+  images: { height: number, width: number, url: string }[],
+  owner: { id: string }
+}
 
 export default function Dashboard( props: GroupProps ) {
 
 	const spotifyApi = useSpotify();
 	const { data: session, status } = useSession();
-	const [ playlists, setPlaylists ] = useState( [] );
+	const [ playlists, setPlaylists ] = useState<Playlist[]>( [] );
 
 	useEffect( () => {
 
@@ -33,7 +41,7 @@ export default function Dashboard( props: GroupProps ) {
 
 		return (
 			<div key={playlist.id}>
-				<img src={playlist.images[ 1 ].url}/>
+				<Image alt="" src={playlist?.images[ 1 ].url}/>
 				{playlist.name}
 			</div>
 		);

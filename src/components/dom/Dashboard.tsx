@@ -11,24 +11,41 @@ export default function Dashboard( props: GroupProps ) {
 
 	useEffect( () => {
 
-		if ( spotifyApi.getAccessToken() ) {
+		if ( Boolean( spotifyApi.getAccessToken() ) ) {
 
-			spotifyApi.getUserPlaylists().then( ( data ) => {
+			spotifyApi.getMe().then( ( currentUser ) => {
 
-				setPlaylists( data.body.items );
+				spotifyApi.getUserPlaylists( currentUser.body.id, { limit: 50 } ).then( ( playlists ) => {
+
+					const userCreatedPlaylists = playlists.body.items.filter( p => p.owner.id === currentUser.body.id );
+					setPlaylists( userCreatedPlaylists );
+
+				} );
 
 			} );
+
 
 		}
 
 	}, [ session, spotifyApi ] );
 
-	// console.log();
+	const topPlaylists = playlists.map( playlist => {
+
+		return (
+			<div key={playlist.id}>
+				<img src={playlist.images[ 1 ].url}/>
+				{playlist.name}
+			</div>
+		);
+
+	} );
+
 	console.log( playlists );
 
 	return (
 		<group {...props}>
 			<button onClick={() => signOut()}>Logout</button>
+			{topPlaylists}
 		</group>
 	);
 

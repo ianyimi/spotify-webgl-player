@@ -1,8 +1,11 @@
 import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import SpotifyWebApi from "spotify-web-api-node";
+import SpotifyApiJS from "spotify-web-api-js";
 
-export const spotifyApi = new SpotifyWebApi( {
+export const spotifyApi = new SpotifyApiJS();
+
+export const spotifyApiNode = new SpotifyWebApi( {
 	clientId: process.env.NEXT_PUBLIC_CLIENT_ID,
 	clientSecret: process.env.NEXT_PUBLIC_CLIENT_SECRET,
 } );
@@ -17,7 +20,7 @@ export default function useSpotify() {
 
 			if ( session.error === "ResfreshAccessTokenError" ) {
 
-				signIn();
+				signIn( "spotify", { callbackUrl: "/" } );
 
 			}
 

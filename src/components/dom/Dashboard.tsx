@@ -61,24 +61,25 @@ export default function Dashboard( props: GroupProps ) {
 
 				if ( firstTracks.total <= 50 ) {
 
-					setTracks( firstTracks.items );
+					setTracks( firstTracks.items.map( t => t.track ) );
 
 				} else {
 
-					let tempTracks: any[] = [];
+					const tempTracks: any[] = firstTracks.items.map( t => t.track );
 					for ( let i = 1; i < Math.min( ( firstTracks.total / 50 + 1 ), 5 ); i ++ ) {
 
 						spotifyApi.getMySavedTracks( { limit: 50, offset: i * 50 } ).then( olderTracks => {
 
-							console.log( tempTracks );
-							tempTracks = i === 1 ? firstTracks.items.concat( olderTracks.items ) : tempTracks.concat( olderTracks.items );
-							// setTracks( tempTracks );
+							olderTracks.items.forEach( t => {
+
+								tempTracks.push( t.track );
+
+							} );
 
 						} );
 
 					}
 
-					console.log( tempTracks );
 					setTracks( tempTracks );
 
 				}

@@ -6,9 +6,28 @@ export const useSpotifyStore = create( ( set, get ) => {
 	return {
 		playlists: [],
 		tracks: [],
+		currentlyPlaying: {},
+		queue: [],
+		history: [],
+		fetchPlaybackData: async ( spotifyApi ) => {
+
+			console.log( "fetching playback data..." );
+			spotifyApi.getGeneric( "https://api.spotify.com/v1/me/player/queue" ).then( ( state ) => {
+
+				set( { currentlyPlaying: state.currentlyPlaying } );
+				set( { queue: state.queue } );
+
+			} );
+			spotifyApi.getGeneric( "https://api.spotify.com/v1/me/player/recently-played" ).then( ( playbackHistory ) => {
+
+				set( { history: playbackHistory.items.map( t => t.track ) } );
+
+			} );
+
+		},
 		fetchPlaylistData: async ( spotifyApi ) => {
 
-			console.log( "fetching playlists" );
+			console.log( "fetching playlists..." );
 			spotifyApi.getMe().then( ( currentUser ) => {
 
 				const id = currentUser.id;
@@ -55,7 +74,7 @@ export const useSpotifyStore = create( ( set, get ) => {
 		},
 		fetchLikedTracks: async ( spotifyApi, maxPages = 5 ) => {
 
-			console.log( "fetching liked tracks" );
+			console.log( "fetching liked tracks..." );
 			spotifyApi.getMySavedTracks( { limit: 50 } ).then( firstTracks => {
 
 				const tempTracks = firstTracks.items.map( t => t.track );

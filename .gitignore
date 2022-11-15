@@ -32,6 +32,7 @@ yarn-error.log*
 # next-pwa
 /public/workbox-*.js
 /public/sw.js
+/public/staging
 
 # prefer yarn than npm
 package-lock.json

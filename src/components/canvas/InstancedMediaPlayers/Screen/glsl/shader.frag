@@ -4,6 +4,7 @@
 // Common uniforms
 uniform vec2 resolution;
 uniform float time;
+uniform float intensity;
 uniform vec3 fogColor;
 
 // Texture uniforms
@@ -56,12 +57,11 @@ highp float random2d(vec2 co) {
  * The main program
  */
 void main() {
-  vec2 coef = vec2(250.*sin(time), 0.);
   // Calculate the effect relative strength
-  float strength = (0.3 + 0.7 * noise1d(0.3 * time)) * coef.x / resolution.x;
+  float strength = (0.3 + 0.7 * noise1d(0.3 * time)) * intensity / resolution.x;
 
   // Calculate the effect jump at the current time interval
-  float jump = 500.0 * floor(0.3 * (coef.x / resolution.x) * (time + noise1d(time)));
+  float jump = 500.0 * floor(0.3 * (intensity / resolution.x) * (time + noise1d(time)));
 
   // Shift the texture coordinates
   vec2 uv = vUv;

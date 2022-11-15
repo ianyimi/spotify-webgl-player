@@ -9,7 +9,8 @@ import { useEffect } from "react";
 export default function Scene( { children, ...props } ) {
 
 	const spotifyApi = useSpotify();
-	const { fetchPlaylistData, fetchLikedTracks } = useSpotifyStore( state => ( {
+	const { fetchPlaybackData, fetchPlaylistData, fetchLikedTracks } = useSpotifyStore( state => ( {
+		fetchPlaybackData: state.fetchPlaybackData,
 		fetchPlaylistData: state.fetchPlaylistData,
 		fetchLikedTracks: state.fetchLikedTracks,
 	} ), shallow );
@@ -18,6 +19,7 @@ export default function Scene( { children, ...props } ) {
 
 		if ( Boolean( spotifyApi.getAccessToken() ) ) {
 
+			fetchPlaybackData( spotifyApi );
 			fetchPlaylistData( spotifyApi );
 			fetchLikedTracks( spotifyApi );
 

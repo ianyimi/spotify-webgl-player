@@ -1,16 +1,22 @@
 import * as THREE from 'three';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useFrame } from '@react-three/fiber';
 import { Line, useCursor } from '@react-three/drei';
 import { ScrollTicker } from "@/templates/Scroll";
+import { useSpotifyStore } from "@/hooks/useSpotifyStore";
+import useSpotify from "@/hooks/useSpotify";
 
 export default function Logo( { route, ...props } ) {
 
+	const spotifyApi = useSpotify();
 	const router = useRouter();
 	const mesh = useRef( null );
 	const [ hovered, hover ] = useState( false );
 	const points = useMemo( () => new THREE.EllipseCurve( 0, 0, 3, 1.15, 0, 2 * Math.PI, false, 0 ).getPoints( 100 ), [] );
+	const { playlists } = useSpotifyStore( state => state.playlists );
+
+	console.log( "canvas playlists are", playlists );
 
 	useCursor( hovered );
 	useFrame( ( state, delta ) => {
@@ -31,6 +37,10 @@ export default function Logo( { route, ...props } ) {
 				onPointerOut={() => hover( false )}>
 				<sphereGeometry args={[ 0.55, 64, 64 ]}/>
 				<meshPhysicalMaterial roughness={0} color={hovered ? 'hotpink' : '#1fb2f5'}/>
+			</mesh>
+			<mesh>
+				<boxBufferGeometry args={[ 1, 1, 1 ]}/>
+				<meshStandardMaterial color="red"/>
 			</mesh>
 			<ScrollTicker/>
 		</group>

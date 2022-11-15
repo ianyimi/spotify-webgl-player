@@ -1,33 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import create from "zustand";
-import createContext from "zustand/context";
-import useSpotify from "@/hooks/useSpotify";
-import { useCallback } from "react";
 
-export const { Provider, useStore } = createContext();
-
-export default function SpotifyProvider( { children } ) {
-
-	return <Provider createStore={createStore}>
-		{children}
-	</Provider>;
-
-}
-
-export const useSpotifyStore = () => create( ( set, get ) => {
-
-	console.log( "init" );
-	const spotifyApi = useSpotify();
-	console.log( "spotifyApi: ", spotifyApi );
+export const useSpotifyStore = create( ( set, get ) => {
 
 	return {
 		playlists: [],
 		tracks: [],
-		fetchPlaylistData: useCallback( async () => {
+		fetchPlaylistData: async ( spotifyApi ) => {
 
+			console.log( "fetching playlists" );
 			spotifyApi.getMe().then( ( currentUser ) => {
-
-				console.log( "spotifyApi (2): ", spotifyApi );
 
 				const id = currentUser.id;
 				spotifyApi.getUserPlaylists( id, { limit: 50 } ).then( ( newPlaylists ) => {
@@ -70,9 +52,10 @@ export const useSpotifyStore = () => create( ( set, get ) => {
 
 			} );
 
-		}, [ spotifyApi ] ),
-		fetchLikedTracks: useCallback( async ( maxPages = 5 ) => {
+		},
+		fetchLikedTracks: async ( spotifyApi, maxPages = 5 ) => {
 
+			console.log( "fetching liked tracks" );
 			spotifyApi.getMySavedTracks( { limit: 50 } ).then( firstTracks => {
 
 				const tempTracks = firstTracks.items.map( t => t.track );
@@ -102,7 +85,7 @@ export const useSpotifyStore = () => create( ( set, get ) => {
 
 			} );
 
-		}, [ spotifyApi ] )
+		},
 
 	};
 

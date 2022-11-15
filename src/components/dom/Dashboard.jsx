@@ -2,14 +2,12 @@ import { useSession, signOut } from "next-auth/react";
 import useSpotify from "@/hooks/useSpotify";
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-// import { useSpotifyStore } from "@/hooks/useSpotifyStore";
-import { useSpotifyStore, useStore } from "@/context/SpotifyProvider";
+import { useSpotifyStore } from "@/hooks/useSpotifyStore";
 import shallow from "zustand/shallow";
 
 export default function Dashboard( props ) {
 
 	const spotifyApi = useSpotify();
-	const { data: session } = useSession();
 
 	const { playlists, tracks, fetchPlaylistData, fetchLikedTracks } = useSpotifyStore( state => ( {
 		playlists: state.playlists,
@@ -22,13 +20,10 @@ export default function Dashboard( props ) {
 
 		if ( Boolean( spotifyApi.getAccessToken() ) ) {
 
-			console.log( "true" );
-			// fetchPlaylistData();
-			// fetchLikedTracks();
+			fetchPlaylistData( spotifyApi );
+			fetchLikedTracks( spotifyApi );
 
 		}
-
-		console.log( "false" );
 
 	}, [ spotifyApi ] );
 
@@ -55,8 +50,7 @@ export default function Dashboard( props ) {
 
 	}
 
-	console.log( "playlists are: ", playlists );
-	console.log( "tracks are: ", tracks );
+	console.log( "playlists are ", playlists );
 
 	return (
 		<div {...props}>

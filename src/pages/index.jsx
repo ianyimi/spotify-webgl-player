@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import Dashboard from '@/components/dom/Dashboard';
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
+import { spotifyApi } from "@/hooks/useSpotify";
 import { redirect } from "next/navigation";
 
 // Dynamic import is used to prevent a payload when the website starts, that includes threejs, r3f etc..

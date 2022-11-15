@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { DoubleSide, ShaderMaterial, Uniform } from "three";
+import { DoubleSide, ShaderMaterial, Uniform, Vector2 } from "three";
 import { useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
@@ -18,12 +18,10 @@ export const useShaderMaterial = () => {
 		() =>
 			new ShaderMaterial( {
 				uniforms: {
-					color: new Uniform( new Vector3( 1., 1., 1. ) ),
 					fogColor: new Uniform( new Vector3( 0., 0., 0. ) ),
 					count: new Uniform( ( ( Boolean( tracks ) ) && tracks.length ) || 0 ),
 					time: new Uniform( 0 ),
 					resolution: new Uniform( new THREE.Vector2( window.innerWidth, window.innerHeight ) ),
-					intensity: new Uniform( 1.0 ),
 					backgroundImage: new Uniform( imageTex )
 				},
 				vertexShader: vert,

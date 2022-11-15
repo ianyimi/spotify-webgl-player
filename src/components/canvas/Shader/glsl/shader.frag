@@ -1,69 +1,81 @@
 #define fogNear 10.
 #define fogFar 25.
 
-uniform highp float time;
-uniform sampler2D tex;
-uniform sampler2D tex2;
-uniform sampler2D backgroundImage;
+// Common uniforms
 uniform vec2 resolution;
-uniform vec3 color;
-uniform mediump float intensity;
+uniform float time;
 uniform vec3 fogColor;
 
+// Texture uniforms
+uniform sampler2D backgroundImage;
+
+// Texture varyings
 varying vec2 vUv;
-precision mediump float;
 
-float random(vec2 v) {
-  return fract(sin(v.x * 32.1231 - v.y * 2.334 + 13399.2312) * 2412.32312);
-}
-float random(float x, float y) {
-  return fract(sin(x * 32.1231 - y * 2.334 + 13399.2312) * 2412.32312);
-}
-float random(float x) {
-  return fract(sin(x * 32.1231 + 13399.2312) * 2412.32312);
-}
-
-float character(float i) {
-  return i<15.01? floor(random(i)*32768.) : 0.;
+/*
+ * Random number generator with a float seed
+ *
+ * Credits:
+ * http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0
+ */
+highp float random1d(float dt) {
+  highp float c = 43758.5453;
+  highp float sn = mod(dt, 3.14);
+  return fract(sin(sn) * c);
 }
 
+/*
+ * Pseudo-noise generator
+ *
+ * Credits:
+ * https://thebookofshaders.com/11/
+ */
+highp float noise1d(float value) {
+  highp float i = floor(value);
+  highp float f = fract(value);
+  return mix(random1d(i), random1d(i + 1.0), smoothstep(0.0, 1.0, f));
+}
+
+/*
+ * Random number generator with a vec2 seed
+ *
+ * Credits:
+ * http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0
+ * https://github.com/mattdesl/glsl-random
+ */
+highp float random2d(vec2 co) {
+  highp float a = 12.9898;
+  highp float b = 78.233;
+  highp float c = 43758.5453;
+  highp float dt = dot(co.xy, vec2(a, b));
+  highp float sn = mod(dt, 3.14);
+  return fract(sin(sn) * c);
+}
+
+/*
+ * The main program
+ */
 void main() {
-  vec2 S = 5. * vec2(25., 50.);
-  vec2 c = floor(vUv * S);
+  vec2 coef = vec2(250.*sin(time), 0.);
+  // Calculate the effect relative strength
+  float strength = (0.3 + 0.7 * noise1d(0.3 * time)) * coef.x / resolution.x;
 
-  float offset = random(c.x) * S.x;
-  float speed = random(c.x * 3.) * .5 + 0.2;
-  float len = random(c.x) * 15. + 100.;
-  float u = 1. - fract(c.y / len + time * speed + offset) * 2.;
+  // Calculate the effect jump at the current time interval
+  float jump = 500.0 * floor(0.3 * (coef.x / resolution.x) * (time + noise1d(time)));
 
-  float padding = 2.;
-  vec2 smS = vec2(3., 5.);
-  vec2 sm = floor(fract(vUv * S) * (smS + vec2(padding))) - vec2(padding);
-  float symbol = character(floor(random(c + floor(time * speed)) * 15.));
-  bool s = sm.x < 0. || sm.x > smS.x || sm.y < 0. || sm.y > smS.y ? false
-  : mod(floor(symbol / pow(2., sm.x + sm.y * smS.x)), 2.) == 1.;
+  // Shift the texture coordinates
+  vec2 uv = vUv;
+  uv.y += 0.2 * strength * (noise1d(5.0 * vUv.y + 2.0 * time + jump) - 0.5);
+  uv.x += 0.1 * strength * (noise1d(100.0 * strength * uv.y + 3.0 * time + jump) - 0.5);
 
-  vec3 curRGB = color;
-  if (s)
-  {
-    if (u > 0.9)
-    {
-      curRGB.r = intensity/2. + 0.25;
-      curRGB.g = intensity/2. + 0.25;
-      curRGB.b = intensity/2. + 0.25;
-    }
-    else if (u > 0.)
-    {
-      curRGB = mix(fogColor, curRGB, u);
-    }
-    else
-    curRGB = fogColor;
-  }
-  else
-  curRGB = fogColor;
+  // Get the texture pixel color
+  vec3 pixel_color = texture2D(backgroundImage, uv).rgb;
 
-  gl_FragColor = vec4(curRGB.x, curRGB.y, curRGB.z, 1.0);
-  gl_FragColor = texture2D(backgroundImage, vUv);
+  // Add some white noise
+  pixel_color += vec3(5.0 * strength * (random2d(vUv + 1.133001 * vec2(time, 1.13)) - 0.5));
+
+  // Fragment shader output
+  gl_FragColor = vec4(pixel_color, 1.0);
 
   // account for fog
   float depth = gl_FragCoord.z / gl_FragCoord.w;

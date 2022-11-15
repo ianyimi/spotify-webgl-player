@@ -5,6 +5,7 @@ import Layout from '@/components/dom/Layout';
 import '@/styles/index.css';
 import Scroll from "@/templates/Scroll";
 import { SessionProvider } from "next-auth/react";
+import SpotifyProvider from "@/context/SpotifyProvider";
 
 const Scene = dynamic( () => import( '@/components/canvas/Scene' ), { ssr: true } );
 
@@ -15,6 +16,7 @@ export default function App( { Component, pageProps = { title: 'Spotify WebGl Pl
 		<>
 			<Header title={pageProps.title}/>
 			<SessionProvider session={pageProps.session} refetchOnWindowFocus>
+				{/*<SpotifyProvider>*/}
 				<Layout ref={ref}>
 					<Scroll>
 						<Component {...pageProps} />
@@ -28,6 +30,7 @@ export default function App( { Component, pageProps = { title: 'Spotify WebGl Pl
 						</Scene>
 					)}
 				</Layout>
+				{/*</SpotifyProvider>*/}
 			</SessionProvider>
 		</>
 	);

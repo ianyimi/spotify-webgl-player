@@ -7,7 +7,7 @@ async function refreshAccessToken( token ) {
 
 	try {
 
-		// spotifyApi.setAccessToken( token.accessToken );
+		spotifyApi.setAccessToken( token.accessToken );
 		spotifyApiNode.setAccessToken( token.accessToken );
 		spotifyApiNode.setRefreshToken( token.refreshToken );
 		spotifyApiNode.refreshAccessToken().then( ( data ) => {

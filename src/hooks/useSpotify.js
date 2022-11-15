@@ -20,11 +20,13 @@ export default function useSpotify() {
 
 			if ( session.error === "ResfreshAccessTokenError" ) {
 
+				console.log( "error" );
 				signIn( "spotify", { callbackUrl: "/" } );
 
 			}
 
 			spotifyApi.setAccessToken( session.user.accessToken );
+			spotifyApiNode.setAccessToken( session.user.accessToken );
 
 		}
 

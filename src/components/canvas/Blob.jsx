@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useCursor, MeshDistortMaterial } from '@react-three/drei';
+import usePostprocess from "@/templates/hooks/usePostprocess";
 
 export default function Blob( { route, ...props } ) {
 
 	const router = useRouter();
 	const [ hovered, hover ] = useState( false );
 	useCursor( hovered );
+
+	usePostprocess();
 	return (
 		<mesh
 			onClick={() => router.push( route )}

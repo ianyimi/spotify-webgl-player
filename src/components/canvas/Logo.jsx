@@ -3,6 +3,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useFrame } from '@react-three/fiber';
 import { Line, useCursor } from '@react-three/drei';
+import { ScrollTicker } from "@/templates/Scroll";
 
 export default function Logo( { route, ...props } ) {
 
@@ -31,6 +32,7 @@ export default function Logo( { route, ...props } ) {
 				<sphereGeometry args={[ 0.55, 64, 64 ]}/>
 				<meshPhysicalMaterial roughness={0} color={hovered ? 'hotpink' : '#1fb2f5'}/>
 			</mesh>
+			<ScrollTicker/>
 		</group>
 	);
 

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useFrame } from '@react-three/fiber';
 import { Line, useCursor } from '@react-three/drei';
 import { ScrollTicker } from "@/templates/Scroll";
-import { useSpotifyStore } from "@/hooks/useSpotifyStore";
+import { useShaderMaterial } from "@/components/canvas/Shader";
 
 export default function Logo( { route, ...props } ) {
 
@@ -12,9 +12,7 @@ export default function Logo( { route, ...props } ) {
 	const mesh = useRef( null );
 	const [ hovered, hover ] = useState( false );
 	const points = useMemo( () => new THREE.EllipseCurve( 0, 0, 3, 1.15, 0, 2 * Math.PI, false, 0 ).getPoints( 100 ), [] );
-	const playlists = useSpotifyStore( state => state.playlists );
-
-	console.log( "canvas playlists are", playlists );
+	const matrixMat = useShaderMaterial();
 
 	useCursor( hovered );
 	useFrame( ( state, delta ) => {
@@ -36,9 +34,8 @@ export default function Logo( { route, ...props } ) {
 				<sphereGeometry args={[ 0.55, 64, 64 ]}/>
 				<meshPhysicalMaterial roughness={0} color={hovered ? 'hotpink' : '#1fb2f5'}/>
 			</mesh>
-			<mesh>
-				<boxBufferGeometry args={[ 1, 1, 1 ]}/>
-				<meshStandardMaterial color="red"/>
+			<mesh material={matrixMat} position-z={2}>
+				<planeGeometry args={[ 2, 2 ]}/>
 			</mesh>
 			<ScrollTicker/>
 		</group>

@@ -9,23 +9,10 @@ export default function Dashboard( props ) {
 
 	const spotifyApi = useSpotify();
 
-	const { playlists, tracks, fetchPlaylistData, fetchLikedTracks } = useSpotifyStore( state => ( {
+	const { playlists, tracks } = useSpotifyStore( state => ( {
 		playlists: state.playlists,
 		tracks: state.tracks,
-		fetchPlaylistData: state.fetchPlaylistData,
-		fetchLikedTracks: state.fetchLikedTracks,
 	} ), shallow );
-
-	useEffect( () => {
-
-		if ( Boolean( spotifyApi.getAccessToken() ) ) {
-
-			fetchPlaylistData( spotifyApi );
-			fetchLikedTracks( spotifyApi );
-
-		}
-
-	}, [ spotifyApi ] );
 
 	const topPlaylists = [];
 	if ( ( Boolean( playlists ) ) && playlists.length > 0 ) {
@@ -49,8 +36,6 @@ export default function Dashboard( props ) {
 		} );
 
 	}
-
-	console.log( "playlists are ", playlists );
 
 	return (
 		<div {...props}>

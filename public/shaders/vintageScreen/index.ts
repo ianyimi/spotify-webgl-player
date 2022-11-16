@@ -4,22 +4,27 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import vert from "./glsl/shader.vert";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import frag from "./glsl/shader.frag";
 import { useTexture } from "@react-three/drei";
 import { useSpotifyStore } from "@/hooks/useSpotifyStore";
 
 type VintageScreenProps = {
   index?: number,
+  url?: string,
   count?: number,
   intensity?: number
 }
 
 export const useVintageScreenMaterial = ( props: VintageScreenProps ) => {
 
-	const { index = 0, count = 0, intensity = 200 } = props;
+	const { index = 0, count = 0, intensity = 200, url } = props;
 	const playlists = useSpotifyStore( state => state.playlists );
-	const imageTex = useTexture( playlists[ index ].images[ 0 ].url );
+	const imageTex = useTexture( url ?? playlists[ index ].images[ 0 ].url );
 
 	const mat = useMemo(
 		() =>
@@ -42,10 +47,10 @@ export const useVintageScreenMaterial = ( props: VintageScreenProps ) => {
 
 	useFrame( ( { clock } ) => {
 
-		if ( mat ) {
+		if ( Boolean( mat ) ) {
 
 			mat.uniforms.time.value = clock.getElapsedTime() / 2;
-			// mat.uniforms.intensity.value = 150 * Math.sin( clock.getElapsedTime() / 5 ) + 100;
+			mat.uniforms.intensity.value = intensity + ( intensity / 4 * Math.sin( clock.getElapsedTime() ) );
 
 		}
 

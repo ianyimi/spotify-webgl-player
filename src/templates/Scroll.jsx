@@ -75,11 +75,13 @@ export default function Scroll( { children } ) {
 
 }
 
-export const ScrollTicker = ( { smooth = 9999999 } ) => {
+const DELTA = 0.003;
 
-	useFrame( ( { viewport, camera }, delta ) => {
+export const ScrollTicker = ( { smooth = 9999999, axis = "y", reverse = false } ) => {
 
-		camera.position.y = damp( camera.position.y, - state.progress * viewport.height, smooth, delta );
+	useFrame( ( { viewport, camera } ) => {
+
+		camera.position[ axis ] = damp( camera.position[ axis ], ( reverse ? 1 : ( - 1 ) ) * state.progress * ( axis !== "y" ? viewport.width : viewport.height ), smooth, DELTA );
 
 	} );
 

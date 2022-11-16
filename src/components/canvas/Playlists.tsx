@@ -1,13 +1,11 @@
-import { useRef } from "react";
-import * as THREE from "three";
 import { useSpotifyStore } from "@/hooks/useSpotifyStore";
 import VintageTelevision from "/public/models/VintageTelevision";
-import { useTexture } from "@react-three/drei";
-import { useVintageScreenMaterial } from "@/components/canvas/InstancedMediaPlayers/Screen";
+import { ReactElement } from "react";
+import { ScrollTicker } from "@/templates/Scroll";
 
 export default function InstancedMediaPlayers() {
 
-	const screens = [];
+	const screens: ReactElement[] = [];
 
 	const playlists = useSpotifyStore( state => state.playlists );
 
@@ -15,7 +13,7 @@ export default function InstancedMediaPlayers() {
 
 		const playlist = playlists[ i ];
 		screens.push(
-			<VintageTelevision key={playlist.id} position-y={- 3 * i} index={playlists.indexOf( playlist )} intensity={100}/>
+			<VintageTelevision key={playlist.id} position-x={5 * i} index={playlists.indexOf( playlist )} intensity={100}/>
 		);
 
 	}
@@ -23,6 +21,7 @@ export default function InstancedMediaPlayers() {
 
 	return <group>
 		{screens}
+		<ScrollTicker axis="x" reverse/>
 	</group>;
 
 }

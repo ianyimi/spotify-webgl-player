@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 // WARNING ! errors might get obfuscated by using dynamic import.
 // If something goes wrong go back to a static import to show the error.
 // https://github.com/pmndrs/react-three-next/issues/49
-const Logo = dynamic( () => import( '@/components/canvas/Logo' ), { ssr: false } );
+const Playlists = dynamic( () => import( '@/components/canvas/Playlists' ), { ssr: false } );
 
 // Dom components go here
 export default function Page( props ) {
@@ -26,7 +26,7 @@ export default function Page( props ) {
 
 // Canvas components go here
 // It will receive same props as the Page component (from getStaticProps, etc.)
-Page.canvas = ( props ) => <Logo route="/blob" position-y={- 1}/>;
+Page.canvas = ( props ) => <Playlists route="/blob" position-y={- 1}/>;
 
 export async function getServerSideProps( { req, res } ) {
 

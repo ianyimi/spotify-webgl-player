@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import React, { useEffect, useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
-import { useVintageScreenMaterial } from "@/components/canvas/InstancedMediaPlayers/Screen";
+import { useVintageScreenMaterial } from "../shaders/vintageScreen";
 import { useSpotifyStore } from "@/hooks/useSpotifyStore";
 
 type GLTFResult = GLTF & {
@@ -22,19 +22,19 @@ type GLTFResult = GLTF & {
 
 type VintageTelevisionProps = {
   intensity?: number,
-  index: number
+  url?: string,
+  index?: number
 } & JSX.IntrinsicElements['group']
 
-const tempTv = new THREE.Object3D();
 const glassMat = new THREE.MeshPhysicalMaterial( { roughness: 0, transmission: 1, thickness: 0.01 } );
 const FILE_URL = "https://dqeczc7c9n9n1.cloudfront.net/models/vintageTelevision-1668539957/vintageTelevision.glb.gz";
 
 export default function Model( props: VintageTelevisionProps ) {
 
-	const { index, intensity = 200, ...restProps } = props;
+	const { url, index = 0, intensity = 200, ...restProps } = props;
 	const group = useRef<THREE.Group>();
 	const { nodes, materials } = useGLTF( FILE_URL ) as GLTFResult;
-	const tvMat = useVintageScreenMaterial( { index: index, intensity: intensity } );
+	const tvMat = useVintageScreenMaterial( { index: index, url: url, intensity: intensity } );
 
 	return (
 		<group ref={group} {...restProps} dispose={null}>

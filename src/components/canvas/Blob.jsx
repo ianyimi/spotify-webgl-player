@@ -9,7 +9,7 @@ export default function Blob( { route, ...props } ) {
 	const [ hovered, hover ] = useState( false );
 	useCursor( hovered );
 
-	usePostprocess();
+	// usePostprocess();
 	return (
 		<mesh
 			onClick={() => router.push( route )}

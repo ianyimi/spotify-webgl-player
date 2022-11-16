@@ -10,7 +10,7 @@ export const spotifyApiNode = new SpotifyWebApi( {
 	clientSecret: process.env.NEXT_PUBLIC_CLIENT_SECRET,
 } );
 
-export default function useSpotify() {
+export default function useSpotify( node = false ) {
 
 	const { data: session, status } = useSession();
 
@@ -25,13 +25,21 @@ export default function useSpotify() {
 
 			}
 
-			spotifyApi.setAccessToken( session.user.accessToken );
+			if ( ! node ) {
+
+				spotifyApi.setAccessToken( session.user.accessToken );
+
+			}
+
 			spotifyApiNode.setAccessToken( session.user.accessToken );
+
 
 		}
 
 	}, [ session ] );
 
-	return spotifyApi;
+	return node ? spotifyApiNode : spotifyApi;
 
 }
+
+

@@ -3,18 +3,24 @@ import { NextResponse } from "next/server";
 
 const secret = process.env.JWT_SECRET;
 
+const lockedPaths = [
+	"/",
+	"/playlist",
+];
+
 export async function middleware( req ) {
 
 	const token = await getToken( { req, secret } );
+	const nextUrl = req.nextUrl;
 
-	if ( ( Boolean( req.nextUrl.pathname.includes( "/api/auth" ) ) ) || token ) {
+	if ( ( Boolean( nextUrl.pathname.includes( "/api/auth" ) ) ) || token ) {
 
 		return NextResponse.next();
 
 	}
 
 	// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-	if ( ! token && req.nextUrl.href.includes( "localhost:3000" ) && req.nextUrl.pathname === "/" ) {
+	if ( ! token && nextUrl.href.includes( "localhost:3000" ) && ( nextUrl.pathname === "/" || nextUrl.pathname.includes( "/playlist" ) ) ) {
 
 		return NextResponse.redirect( "http://localhost:3000/login" );
 

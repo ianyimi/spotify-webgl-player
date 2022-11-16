@@ -15,8 +15,9 @@ export default function InstancedMediaPlayers() {
 		screens.push(
 			<VintageTelevision
 				key={playlist.id}
-				route={`/playlist/${playlist.id}/${playlists.indexOf( playlist )}`}
-				position-x={5 * i}
+				route={`/playlist/${playlist.id}`}
+				position-y={- 3 * i}
+				// position-x={5 * i}
 				index={playlists.indexOf( playlist )}
 				intensity={100}
 			/>
@@ -27,7 +28,7 @@ export default function InstancedMediaPlayers() {
 
 	return <group>
 		{screens}
-		<ScrollTicker axis="x" reverse/>
+		<ScrollTicker axis="y"/>
 	</group>;
 
 }

@@ -50,7 +50,7 @@ export default function Scroll( { children } ) {
 
 		};
 
-	}, [] );
+	}, [ wrapper.current, content.current ] );
 
 	return (
 		<div
@@ -74,6 +74,12 @@ export default function Scroll( { children } ) {
 	);
 
 }
+
+export const useScroll = () => {
+
+	return { top: state.top, progress: state.progress };
+
+};
 
 const DELTA = 0.003;
 

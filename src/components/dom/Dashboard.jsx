@@ -13,9 +13,9 @@ export default function Dashboard( { playlists, ...restProps } ) {
 					{( Boolean( playlist.images ) ) && playlist.images.length > 0 &&
             <Image
             	alt={playlist.description}
-            	src={playlist?.images[ 1 ].url}
-            	width={playlist.images[ 1 ].width}
-            	height={playlist.images[ 1 ].height}
+            	src={playlist?.images[ 0 ].url}
+            	width={240}
+            	height={240}
             />
 					}
 					{playlist.name}

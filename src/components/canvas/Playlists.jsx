@@ -1,15 +1,10 @@
 import VintageTelevision from "public/models/VintageTelevision";
-import { ReactElement } from "react";
 import { ScrollTicker } from "@/templates/Scroll";
 
-interface InstancedMediaProps {
-  playlists: any[];
-}
-
-export default function InstancedMediaPlayers( props: InstancedMediaProps ) {
+export default function InstancedMediaPlayers( props ) {
 
 	const { playlists } = props;
-	const screens: ReactElement[] = [];
+	const screens = [];
 
 	for ( let i = 0; i < playlists.length; i ++ ) {
 

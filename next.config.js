@@ -14,13 +14,15 @@ const nextConfig = {
 	// },
 	experimental: {},
 	images: {
-		remotePatterns: [
-			{
-				protocol: "https",
-				hostname: "mosaic.scdn.co",
-				port: ""
-			}
-		]
+		domains: [
+			"mosaic.scdn.co",
+			"seed-mix-image.spotifycdn.com",
+			"i.scdn.co",
+			"seeded-session-images.scdn.co",
+			"lineup-images.scdn.co",
+			"dailymix-images.scdn.co",
+			"mixed-media-images.spotifycdn.com"
+		],
 	},
 	reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.
 	webpack( config, { isServer } ) {

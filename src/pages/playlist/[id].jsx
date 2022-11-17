@@ -22,15 +22,15 @@ export default function Playlist( { items } ) {
 
 }
 
-Playlist.canvas = ( { data } ) => {
+Playlist.canvas = ( { url } ) => {
 
 	return <group>
-		<VintageTelevision url={data.images[ 0 ].url} route={"/"}/>
+		<VintageTelevision url={url} route={"/"}/>
 	</group>;
 
 };
 
-export async function getServerSideProps( { req, res, query, token } ) {
+export async function getServerSideProps( { req, res, query } ) {
 
 	const session = await unstable_getServerSession( req, res, authOptions );
 
@@ -49,12 +49,12 @@ export async function getServerSideProps( { req, res, query, token } ) {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	spotifyApiNode.setAccessToken( session.user.accessToken );
-	const playlistData = await fetchPlaylistData( spotifyApiNode, query.id );
+	const { url, items } = await fetchPlaylistData( spotifyApiNode, query.id );
 
 	return {
 		props: {
-			data: playlistData?.data ?? null,
-			items: playlistData?.items ?? null
+			url: await url ?? null,
+			items: await items ?? null
 		}
 	};
 

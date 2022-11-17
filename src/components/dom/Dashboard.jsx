@@ -5,14 +5,7 @@ import Image from "next/image";
 import { useSpotifyStore } from "@/hooks/useSpotifyStore";
 import shallow from "zustand/shallow";
 
-export default function Dashboard( props ) {
-
-	const spotifyApi = useSpotify();
-
-	const { playlists, tracks } = useSpotifyStore( state => ( {
-		playlists: state.playlists,
-		tracks: state.tracks,
-	} ), shallow );
+export default function Dashboard( { playlists, ...restProps } ) {
 
 	const topPlaylists = [];
 	if ( ( Boolean( playlists ) ) && playlists.length > 0 ) {
@@ -38,7 +31,7 @@ export default function Dashboard( props ) {
 	}
 
 	return (
-		<div {...props}>
+		<div {...restProps}>
 			<button onClick={() => signOut()}>Logout</button>
 			{topPlaylists}
 		</div>

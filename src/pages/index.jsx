@@ -2,8 +2,9 @@ import dynamic from 'next/dynamic';
 import Dashboard from '@/components/dom/Dashboard';
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
-import { spotifyApi } from "@/hooks/useSpotify";
+import { spotifyApi, spotifyApiNode } from "@/hooks/useSpotify";
 import { redirect } from "next/navigation";
+import { fetchUserPlaylists } from "../../lib/api";
 
 // Dynamic import is used to prevent a payload when the website starts, that includes threejs, r3f etc..
 // WARNING ! errors might get obfuscated by using dynamic import.
@@ -12,13 +13,11 @@ import { redirect } from "next/navigation";
 const Playlists = dynamic( () => import( '@/components/canvas/Playlists' ), { ssr: false } );
 
 // Dom components go here
-export default function Page( props ) {
-
-	const { session } = props;
+export default function Page( { playlists } ) {
 
 	return (
 		<div>
-			<Dashboard/>
+			<Dashboard playlists={playlists}/>
 		</div>
 	);
 
@@ -39,10 +38,20 @@ export async function getServerSideProps( { req, res } ) {
 		},
 	};
 
+	res.setHeader(
+		'Cache-Control',
+		'public, s-maxage=10, stale-while-revalidate=59'
+	);
+
+	spotifyApiNode.setAccessToken( session.user.accessToken );
+	const { total, playlists } = await fetchUserPlaylists( spotifyApiNode );
+
 	return {
 		props: {
 			title: "Spotify WebGl Player",
 			session: session,
+			total: await total ?? null,
+			playlists: await playlists ?? null
 		}
 	};
 

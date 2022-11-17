@@ -1,11 +1,8 @@
 import VintageTelevision from "public/models/VintageTelevision";
-import { useSpotifyStore } from "@/hooks/useSpotifyStore";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { spotifyApiNode } from "@/hooks/useSpotify";
 import { fetchPlaylistData } from "lib/api";
-import { ReactElement } from "react";
-
 
 export default function Playlist( { items } ) {
 
@@ -43,6 +40,11 @@ export async function getServerSideProps( { req, res, query, token } ) {
 			permanent: false
 		},
 	};
+
+	res.setHeader(
+		'Cache-Control',
+		'public, s-maxage=10, stale-while-revalidate=59'
+	);
 
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore

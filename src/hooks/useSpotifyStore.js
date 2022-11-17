@@ -105,9 +105,6 @@ export const useSpotifyStore = create( ( set, get ) => {
 			} );
 
 		},
-		fetchPlaylistTracks: async ( spotifyApi ) => {
-
-		}
 
 	};
 

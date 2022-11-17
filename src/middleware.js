@@ -3,11 +3,6 @@ import { NextResponse } from "next/server";
 
 const secret = process.env.JWT_SECRET;
 
-const lockedPaths = [
-	"/",
-	"/playlist",
-];
-
 export async function middleware( req ) {
 
 	const token = await getToken( { req, secret } );

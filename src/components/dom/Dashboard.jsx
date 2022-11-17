@@ -1,9 +1,5 @@
-import { useSession, signOut } from "next-auth/react";
-import useSpotify from "@/hooks/useSpotify";
-import { useCallback, useEffect, useState } from "react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
-import { useSpotifyStore } from "@/hooks/useSpotifyStore";
-import shallow from "zustand/shallow";
 
 export default function Dashboard( { playlists, ...restProps } ) {
 

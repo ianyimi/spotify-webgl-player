@@ -1,13 +1,15 @@
-import { useSpotifyStore } from "@/hooks/useSpotifyStore";
 import VintageTelevision from "public/models/VintageTelevision";
 import { ReactElement } from "react";
 import { ScrollTicker } from "@/templates/Scroll";
 
-export default function InstancedMediaPlayers() {
+interface InstancedMediaProps {
+  playlists: any[];
+}
 
+export default function InstancedMediaPlayers( props: InstancedMediaProps ) {
+
+	const { playlists } = props;
 	const screens: ReactElement[] = [];
-
-	const playlists = useSpotifyStore( state => state.playlists );
 
 	for ( let i = 0; i < playlists.length; i ++ ) {
 
@@ -18,7 +20,7 @@ export default function InstancedMediaPlayers() {
 				route={`/playlist/${playlist.id}`}
 				position-y={- 3 * i}
 				// position-x={5 * i}
-				index={playlists.indexOf( playlist )}
+				url={playlist.images[ 0 ].url}
 				intensity={100}
 			/>
 		);

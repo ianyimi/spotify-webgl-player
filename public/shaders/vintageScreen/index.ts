@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { DoubleSide, ShaderMaterial, Uniform, Vector2 } from "three";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 
@@ -11,20 +11,17 @@ import vert from "./glsl/shader.vert";
 // @ts-ignore
 import frag from "./glsl/shader.frag";
 import { useTexture } from "@react-three/drei";
-import { useSpotifyStore } from "@/hooks/useSpotifyStore";
 
 type VintageScreenProps = {
-  index?: number,
-  url?: string,
+  url: string,
   count?: number,
   intensity?: number
 }
 
 export const useVintageScreenMaterial = ( props: VintageScreenProps ) => {
 
-	const { index = 0, count = 0, intensity = 200, url } = props;
-	const playlists = useSpotifyStore( state => state.playlists );
-	const imageTex = useTexture( url ?? playlists[ index ].images[ 0 ].url );
+	const { url, count = 0, intensity = 200 } = props;
+	const imageTex = useTexture( url );
 
 	const mat = useMemo(
 		() =>
@@ -42,7 +39,7 @@ export const useVintageScreenMaterial = ( props: VintageScreenProps ) => {
 				side: DoubleSide,
 				fog: true
 			} ),
-		[ frag, vert, playlists, imageTex, index, count, intensity ]
+		[ frag, vert, url, imageTex, count, intensity ]
 	);
 
 	useFrame( ( { clock } ) => {

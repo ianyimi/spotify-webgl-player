@@ -7,7 +7,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useCursor, useGLTF } from '@react-three/drei';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { useVintageScreenMaterial } from "../shaders/vintageScreen";
-import { useSpotifyStore } from "@/hooks/useSpotifyStore";
 import { useRouter } from "next/router";
 
 type GLTFResult = GLTF & {
@@ -24,7 +23,7 @@ type GLTFResult = GLTF & {
 type VintageTelevisionProps = {
   intensity?: number,
   route?: string,
-  url?: string,
+  url: string,
   index?: number
 } & JSX.IntrinsicElements['group']
 
@@ -38,7 +37,7 @@ export default function Model( props: VintageTelevisionProps ) {
 	const { url, route, index = 0, intensity = 200, ...restProps } = props;
 	const group = useRef<THREE.Group>();
 	const { nodes, materials } = useGLTF( FILE_URL ) as GLTFResult;
-	const tvMat = useVintageScreenMaterial( { index: index, url: url, intensity: intensity } );
+	const tvMat = useVintageScreenMaterial( { url: url, intensity: intensity } );
 
 	useCursor( hovered );
 

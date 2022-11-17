@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 import Dashboard from '@/components/dom/Dashboard';
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
-import { spotifyApi, spotifyApiNode } from "@/hooks/useSpotify";
+import { spotifyApi } from "@/hooks/useSpotify";
 import { redirect } from "next/navigation";
 import { fetchUserPlaylists } from "../../lib/api";
 
@@ -25,7 +25,15 @@ export default function Page( { playlists } ) {
 
 // Canvas components go here
 // It will receive same props as the Page component (from getStaticProps, etc.)
-Page.canvas = ( props ) => <Playlists route="/blob" position-y={- 1}/>;
+Page.canvas = ( { playlists } ) => {
+
+	return (
+		<group>
+			{( Boolean( playlists ) ) && <Playlists playlists={playlists} position-y={- 1}/>}
+		</group>
+	);
+
+};
 
 export async function getServerSideProps( { req, res } ) {
 
@@ -43,8 +51,8 @@ export async function getServerSideProps( { req, res } ) {
 		'public, s-maxage=10, stale-while-revalidate=59'
 	);
 
-	spotifyApiNode.setAccessToken( session.user.accessToken );
-	const { total, playlists } = await fetchUserPlaylists( spotifyApiNode );
+	spotifyApi.setAccessToken( session.user.accessToken );
+	const { total, playlists } = await fetchUserPlaylists( spotifyApi );
 
 	return {
 		props: {

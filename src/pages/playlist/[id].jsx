@@ -1,7 +1,7 @@
 import VintageTelevision from "public/models/VintageTelevision";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { spotifyApiNode } from "@/hooks/useSpotify";
+import { spotifyApi } from "@/hooks/useSpotify";
 import { fetchPlaylistData } from "lib/api";
 
 export default function Playlist( { items } ) {
@@ -48,8 +48,8 @@ export async function getServerSideProps( { req, res, query } ) {
 
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
-	spotifyApiNode.setAccessToken( session.user.accessToken );
-	const { url, items } = await fetchPlaylistData( spotifyApiNode, query.id );
+	spotifyApi.setAccessToken( session.user.accessToken );
+	const { url, items } = await fetchPlaylistData( spotifyApi, query.id );
 
 	return {
 		props: {

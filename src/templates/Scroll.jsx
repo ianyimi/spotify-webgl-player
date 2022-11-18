@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { useRef } from 'react';
 import * as THREE from 'three';
 
-const state = {
+export const ScrollState = {
 	top: 0,
 	progress: 0,
 };
@@ -38,8 +38,8 @@ export default function Scroll( { children } ) {
 
 		lenis.on( 'scroll', ( { scroll, progress } ) => {
 
-			state.top = scroll;
-			state.progress = progress;
+			ScrollState.top = scroll;
+			ScrollState.progress = progress;
 
 		} );
 		const effectSub = addEffect( ( time ) => lenis.raf( time ) );
@@ -77,7 +77,7 @@ export default function Scroll( { children } ) {
 
 export const useScroll = () => {
 
-	return { top: state.top, progress: state.progress };
+	return { top: ScrollState.top, progress: ScrollState.progress };
 
 };
 
@@ -87,7 +87,7 @@ export const ScrollTicker = ( { smooth = 9999999, axis = "y", reverse = false } 
 
 	useFrame( ( { viewport, camera } ) => {
 
-		camera.position[ axis ] = damp( camera.position[ axis ], ( reverse ? 1 : ( - 1 ) ) * state.progress * ( axis !== "y" ? viewport.width : viewport.height ), smooth, DELTA );
+		camera.position[ axis ] = damp( camera.position[ axis ], ( reverse ? 1 : ( - 1 ) ) * ScrollState.progress * ( axis !== "y" ? viewport.width : viewport.height ), smooth, DELTA );
 
 	} );
 

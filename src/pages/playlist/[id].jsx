@@ -10,9 +10,10 @@ export default function Playlist( { items } ) {
 
 	items.forEach( item => {
 
+		if ( item.track === null ) return;
 		const track = item.track;
 		trackNames.push(
-			<div key={track.id}>{track.name}</div>
+			<div key={track.id}>{track.name} - {track.artists[ 0 ].name}</div>
 		);
 
 	} );

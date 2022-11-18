@@ -3,14 +3,13 @@ import { DoubleSide, ShaderMaterial, Uniform, Vector2 } from "three";
 import { useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
-
+import { useTexture } from "@react-three/drei";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import vert from "./glsl/shader.vert";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import frag from "./glsl/shader.frag";
-import { useTexture } from "@react-three/drei";
 
 type VintageScreenProps = {
   url: string,

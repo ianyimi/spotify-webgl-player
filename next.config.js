@@ -21,7 +21,8 @@ const nextConfig = {
 			"seeded-session-images.scdn.co",
 			"lineup-images.scdn.co",
 			"dailymix-images.scdn.co",
-			"mixed-media-images.spotifycdn.com"
+			"mixed-media-images.spotifycdn.com",
+			"newjams-images.scdn.co"
 		],
 	},
 	reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.

@@ -1,8 +1,14 @@
 import VintageTelevision from "public/models/VintageTelevision";
 import { ScrollTicker } from "@/templates/Scroll";
+import { ScrollState } from "@/templates/Scroll";
+import { useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 
-export default function InstancedMediaPlayers( props ) {
+const ERROR_IMAGE_URL = "https://dqeczc7c9n9n1.cloudfront.net/images/404.png";
 
+export default function Playlists( props ) {
+
+	const group = useRef( null );
 	const { playlists } = props;
 	const screens = [];
 
@@ -13,19 +19,27 @@ export default function InstancedMediaPlayers( props ) {
 			<VintageTelevision
 				key={playlist.id}
 				route={`/playlist/${playlist.id}`}
-				position-y={- 3 * i}
-				// position-x={5 * i}
-				url={playlist.images[ 0 ].url}
+				// position-y={- 3 * i}
+				position-x={5 * i}
+				url={playlist?.images[ 0 ]?.url ?? ERROR_IMAGE_URL}
 				intensity={100}
 			/>
 		);
 
 	}
 
+	useFrame( ( { clock } ) => {
 
-	return <group>
+		if ( ! group.current ) return;
+
+		group.current.position.x = ScrollState.progress * - 4.95 * playlists.length;
+
+	} );
+
+
+	return <group ref={group}>
 		{screens}
-		<ScrollTicker axis="y"/>
+		{/*<ScrollTicker axis="y"/>*/}
 	</group>;
 
 }

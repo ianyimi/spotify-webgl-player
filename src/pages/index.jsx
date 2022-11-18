@@ -3,8 +3,7 @@ import Dashboard from '@/components/dom/Dashboard';
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { spotifyApi } from "@/hooks/useSpotify";
-import { redirect } from "next/navigation";
-import { fetchUserCreatedPlaylists } from "../../lib/api";
+import { fetchUserLikedPlaylists } from "../../lib/api";
 
 // Dynamic import is used to prevent a payload when the website starts, that includes threejs, r3f etc..
 // WARNING ! errors might get obfuscated by using dynamic import.
@@ -39,7 +38,7 @@ export async function getServerSideProps( { req, res } ) {
 
 	const session = await unstable_getServerSession( req, res, authOptions );
 
-	console.log( "SESSION IS: ", session );
+	// console.log( "SESSION IS: ", session );
 	if ( ! session ) return {
 		redirect: {
 			destination: "login",
@@ -53,7 +52,7 @@ export async function getServerSideProps( { req, res } ) {
 	);
 
 	spotifyApi.setAccessToken( session.user.accessToken );
-	const { total, playlists } = await fetchUserCreatedPlaylists( spotifyApi );
+	const { total, playlists } = await fetchUserLikedPlaylists( spotifyApi );
 
 	return {
 		props: {

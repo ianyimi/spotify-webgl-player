@@ -30,7 +30,7 @@ export default function Playlists( props ) {
 
 	useFrame( ( { clock } ) => {
 
-		if ( group.current !== null ) return;
+		if ( group.current === null ) return;
 
 		group.current.position.x = ScrollState.progress * - 4.95 * playlists.length;
 

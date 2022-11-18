@@ -52,7 +52,14 @@ export async function getServerSideProps( { req, res } ) {
 	);
 
 	spotifyApi.setAccessToken( session.user.accessToken );
-	const { total, playlists } = await fetchUserLikedPlaylists( spotifyApi );
+	const { total, playlists, error } = await fetchUserLikedPlaylists( spotifyApi );
+
+	if ( error ) return {
+		redirect: {
+			destination: "login",
+			permanent: false
+		}
+	};
 
 	return {
 		props: {

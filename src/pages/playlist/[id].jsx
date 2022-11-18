@@ -50,7 +50,16 @@ export async function getServerSideProps( { req, res, query } ) {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	spotifyApi.setAccessToken( session.user.accessToken );
-	const { url, items } = await fetchPlaylistData( spotifyApi, query.id );
+	const { url, items, error } = await fetchPlaylistData( spotifyApi, query.id );
+
+	if ( error ) return {
+
+		redirect: {
+			destination: "/login",
+			permanent: false
+		}
+
+	};
 
 	return {
 		props: {

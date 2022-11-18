@@ -19,14 +19,7 @@
   "rules": {
     "import/prefer-default-export": "off",
     "no-console": "warn",
-    "no-var": "error",
-    "@typescript-eslint/strict-boolean-expressions": [
-      2,
-      {
-        "allowString": false,
-        "allowNumber": false
-      }
-    ]
+    "no-var": "error"
   },
   "settings": {
     "import/parsers": {

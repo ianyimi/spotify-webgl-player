@@ -32,7 +32,7 @@ Page.canvas = ( { playlists } ) => {
 	return (
 		<group>
 			<Environment/>
-			{( Boolean( playlists ) ) && <Playlists playlists={playlists} gridSize={5} position-y={- 1}/>}
+			{( Boolean( playlists ) ) && <Playlists playlists={playlists} rowLength={5} position-y={- 1}/>}
 			{/*<Blob/>*/}
 			{/*<Points/>*/}
 			{/*<mesh position-z={1}>*/}

@@ -1,5 +1,5 @@
 import { Canvas, extend } from '@react-three/fiber';
-import { Effects, OrbitControls, Preload } from '@react-three/drei';
+import { Effects, Preload } from '@react-three/drei';
 import { HalfFloatType, LinearEncoding, Vector2 } from "three";
 import { AdaptiveToneMappingPass } from "three/examples/jsm/postprocessing/AdaptiveToneMappingPass";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
@@ -10,9 +10,7 @@ extend( { UnrealBloomPass, AdaptiveToneMappingPass, ShaderPass } );
 
 const RenderPipeline = () => (
 	<Effects disableGamma encoding={LinearEncoding} type={HalfFloatType}>
-		<unrealBloomPass
-			args={[ new Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.0, 0.8 ]}
-		/>
+		<unrealBloomPass args={[ new Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.0, 0.8 ]}/>
 		<adaptiveToneMappingPass args={[ true, 256 ]}/>
 		<shaderPass args={[ VignetteShader ]}/>
 	</Effects>
@@ -24,11 +22,8 @@ export default function Scene( { children, ...props } ) {
 	return (
 		<Canvas flat {...props}>
 			<RenderPipeline/>
-
-			{/*<ambientLight intensity={0.75}/>*/}
 			{children}
 			<Preload all/>
-			{/*<OrbitControls/>*/}
 		</Canvas>
 	);
 

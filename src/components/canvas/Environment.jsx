@@ -15,8 +15,8 @@ export default function Environment( props ) {
 
 	return (
 		<group {...props}>
-			<ambientLight intensity={0.5}/>
-			<directionalLight position={[ 0, 2, - 3 ]} intensity={0.75}/>
+			<ambientLight intensity={1}/>
+			<directionalLight position={[ 0, 5, - 5 ]} intensity={2}/>
 			<mesh rotation={[ - Math.PI / 2, 0, 0 ]}>
 				<planeGeometry args={[ 100, 100 ]}/>
 				<MeshReflectorMaterial

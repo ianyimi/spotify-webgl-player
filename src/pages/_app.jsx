@@ -8,7 +8,10 @@ import { SessionProvider } from "next-auth/react";
 
 const Scene = dynamic( () => import( '@/components/canvas/Scene' ), { ssr: true } );
 
-export default function App( { Component, pageProps = { title: 'Spotify WebGl Player', session, ...pageProps } } ) {
+export default function App( {
+	Component,
+	pageProps = { title: 'Spotify WebGl Player', session, playlists, ...pageProps }
+} ) {
 
 	const ref = useRef();
 	return (
@@ -26,6 +29,7 @@ export default function App( { Component, pageProps = { title: 'Spotify WebGl Pl
 							eventPrefix="client"
 							camera={{
 								position: [ 10, 5, 5 ]
+								// position: [ 0, 1, 5 ]
 							}}
 						>
 							{Component.canvas( pageProps )}

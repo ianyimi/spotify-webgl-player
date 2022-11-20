@@ -14,12 +14,13 @@ import frag from "./glsl/shader.frag";
 type VintageScreenProps = {
   url: string,
   count?: number,
-  intensity?: number
+  intensity?: number,
+  fbo?: any
 }
 
 export const useSceneMaterial = ( props: VintageScreenProps ) => {
 
-	const { url, count = 0, intensity = 200 } = props;
+	const { url, count = 0, intensity = 200, fbo } = props;
 	const imageTex = useTexture( url );
 
 	const mat = useMemo(
@@ -31,26 +32,15 @@ export const useSceneMaterial = ( props: VintageScreenProps ) => {
 					time: new Uniform( 0 ),
 					intensity: new Uniform( intensity ),
 					resolution: new Uniform( new THREE.Vector2( window.innerWidth, window.innerHeight ) ),
-					backgroundImage: new Uniform( imageTex )
+					backgroundImage: new Uniform( fbo ? fbo : imageTex ),
 				},
 				vertexShader: vert,
 				fragmentShader: frag,
 				side: DoubleSide,
 				fog: true
 			} ),
-		[ frag, vert, url, imageTex, count, intensity ]
+		[ frag, vert, url, imageTex, count, intensity, fbo ]
 	);
-
-	useFrame( ( { clock } ) => {
-
-		if ( Boolean( mat ) ) {
-
-			mat.uniforms.time.value = clock.getElapsedTime() / 2;
-			mat.uniforms.intensity.value = intensity + ( intensity / 4 * Math.sin( clock.getElapsedTime() ) );
-
-		}
-
-	} );
 
 	return mat;
 

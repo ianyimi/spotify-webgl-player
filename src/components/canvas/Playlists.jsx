@@ -10,26 +10,30 @@ const DELTA = 0.003;
 export default function Playlists( props ) {
 
 	const group = useRef( null );
-	const { playlists, gridSize } = props;
+	const { playlists, rowLength } = props;
 	const screens = [];
 
-	for ( let z = 0, i = 0; z < Math.floor( playlists.length / gridSize ); z ++ ) {
+	for ( let z = 0, i = 0; z < Math.floor( playlists.length / rowLength ); z ++ ) {
 
-		for ( let x = 0; x < gridSize; x ++ ) {
+		for ( let x = 0; x < rowLength; x ++ ) {
 
 			if ( i < playlists.length ) {
 
 				const playlist = playlists[ i ];
-				console.log( `{ x: ${x}, z: ${i} }` );
 				screens.push(
 					<VintageTelevision
 						key={playlist.id}
 						route={`/playlist/${playlist.id}`}
 						position-x={5 * x}
-						position-z={5 * z}
+						position-z={7 * z}
 						url={playlist?.images[ 0 ]?.url ?? ERROR_IMAGE_URL}
 						intensity={100}
-					/>
+					>
+						{/*<mesh>*/}
+						{/*	<boxGeometry args={[ 1, 1 ]}/>*/}
+						{/*	<meshBasicMaterial color="green"/>*/}
+						{/*</mesh>*/}
+					</VintageTelevision>
 				);
 
 			}

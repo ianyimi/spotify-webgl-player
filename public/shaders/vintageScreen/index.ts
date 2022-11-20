@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { DoubleSide, ShaderMaterial, Uniform, Vector2 } from "three";
-import { useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Vector3 } from "three";
-import { useTexture } from "@react-three/drei";
+import { useFBO, useTexture } from "@react-three/drei";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import vert from "./glsl/shader.vert";

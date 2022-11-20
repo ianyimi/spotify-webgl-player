@@ -10,13 +10,16 @@ import { fetchUserLikedPlaylists } from "../../lib/api";
 // If something goes wrong go back to a static import to show the error.
 // https://github.com/pmndrs/react-three-next/issues/49
 const Playlists = dynamic( () => import( '@/components/canvas/Playlists' ), { ssr: false } );
+const Blob = dynamic( () => import( '@/components/canvas/Blob' ), { ssr: false } );
+const Points = dynamic( () => import( '@/components/canvas/Points' ), { ssr: false } );
+const Environment = dynamic( () => import( '@/components/canvas/Environment' ), { ssr: false } );
 
 // Dom components go here
 export default function Page( { playlists } ) {
 
 	return (
 		<div>
-			<Dashboard playlists={playlists}/>
+			{/*<Dashboard playlists={playlists}/>*/}
 		</div>
 	);
 
@@ -28,7 +31,14 @@ Page.canvas = ( { playlists } ) => {
 
 	return (
 		<group>
-			{( Boolean( playlists ) ) && <Playlists playlists={playlists} position-y={- 1}/>}
+			<Environment/>
+			{( Boolean( playlists ) ) && <Playlists playlists={playlists} gridSize={5} position-y={- 1}/>}
+			{/*<Blob/>*/}
+			{/*<Points/>*/}
+			{/*<mesh position-z={1}>*/}
+			{/*	<boxGeometry args={[ 1, 1, 1 ]}/>*/}
+			{/*	<meshStandardMaterial color="green" emmissive="green" emmissiveIntensity={1}/>*/}
+			{/*</mesh>*/}
 		</group>
 	);
 

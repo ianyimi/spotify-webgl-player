@@ -28,8 +28,8 @@ export default function App( {
 							eventSource={ref}
 							eventPrefix="client"
 							camera={{
-								position: [ 10, 5, 5 ]
-								// position: [ 0, 1, 5 ]
+								// position: [ 10, 5, 5 ]
+								position: [ 0, 1, 5 ]
 							}}
 						>
 							{Component.canvas( pageProps )}

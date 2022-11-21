@@ -6,9 +6,11 @@ uniform vec2 resolution;
 uniform float time;
 uniform float intensity;
 uniform vec3 fogColor;
+uniform float altScene;
 
 // Texture uniforms
 uniform sampler2D backgroundImage;
+uniform sampler2D renderedScene;
 
 // Texture varyings
 varying vec2 vUv;
@@ -70,6 +72,9 @@ void main() {
 
   // Get the texture pixel color
   vec3 pixel_color = texture2D(backgroundImage, uv).rgb;
+  if (altScene == 1.0) {
+    pixel_color = texture2D(renderedScene, uv).rgb;
+  }
 
   // Add some white noise
   pixel_color += vec3(5.0 * strength * (random2d(vUv + 1.133001 * vec2(time, 1.13)) - 0.5));

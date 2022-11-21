@@ -2,16 +2,23 @@ import { MeshReflectorMaterial } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { Object3D } from "three";
 import { useEffect } from "react";
+import usePostProcess from "@/templates/hooks/usePostprocess";
+import { useSceneStore } from "@/hooks/useStore";
 
 export default function Environment( props ) {
 
-	const { camera } = useThree();
+	const { scene, camera, gl } = useThree();
+	const [ present, addContext, forward ] = useSceneStore( state => [ state.present, state.addContext, state.forward ] );
 
+	console.log( "test", present?.camera );
 	useEffect( () => {
 
 		camera && camera.lookAt( camera.position.x, 0, 0 );
+		console.log( "add context", gl );
+		addContext( gl, scene, camera );
+		forward();
 
-	}, [] );
+	}, [ gl, scene ] );
 
 	return (
 		<group {...props}>

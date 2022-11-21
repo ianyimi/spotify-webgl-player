@@ -1,6 +1,10 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
+import vert from "./glsl/shader.vert";
+import frag from "./glsl/shader.frag";
+import { Uniform } from "three";
+import { useSceneStore } from "@/hooks/useStore";
 
 function getFullscreenTriangle() {
 
@@ -15,12 +19,16 @@ function getFullscreenTriangle() {
 
 }
 
+const DELTA = 0.003;
+
 // Basic shader postprocess based on the template https://gist.github.com/RenaudRohlinger/bd5d15316a04d04380e93f10401c40e7
 // USAGE: Simply call usePostprocess hook in your r3f component to apply the shader to the canvas as a postprocess effect
 const usePostProcess = () => {
 
+	const [ past, present, future, addScene, forward ] = useSceneStore( state => [ state.past, state.present, state.future, state.addContext, state.forward ] );
 	const [ { dpr }, size, gl ] = useThree( ( s ) => [ s.viewport, s.size, s.gl ] );
 
+	// console.log( present );
 	const [ screenCamera, screenScene, screen, renderTarget ] = useMemo( () => {
 
 		let screenScene = new THREE.Scene();
@@ -32,54 +40,27 @@ const usePostProcess = () => {
 		const renderTarget = new THREE.WebGLRenderTarget( 512, 512, { samples: 4, encoding: gl.encoding } );
 		renderTarget.depthTexture = new THREE.DepthTexture(); // fix depth issues
 
+		addScene( renderTarget );
+
 		// use ShaderMaterial for linearToOutputTexel
 		screen.material = new THREE.RawShaderMaterial( {
 			uniforms: {
-				diffuse: { value: null },
-				time: { value: 0 },
+				// 0 - past; 1 - present; 2 - future
+				active_scene: new Uniform( 1 ),
+				diffuse: new Uniform( null ),
+				past_scene: new Uniform( null ),
+				present_scene: new Uniform( null ),
+				future_scene: new Uniform( null ),
+				time: new Uniform( 0 ),
 			},
-			vertexShader: /* glsl */ `
-
-        in vec2 uv;
-        in vec3 position;
-				precision highp float;
-
-        out vec2 vUv;
-				void main() {
-          vUv = uv;
-					gl_Position = vec4( position, 1.0 );
-
-        }
-      `,
-			fragmentShader: /* glsl */ `
-				precision highp float;
-        out highp vec4 pc_fragColor;
-        uniform sampler2D diffuse;
-        uniform float time;
-        in vec2 vUv;
-
-        // based on https://www.shadertoy.com/view/llGXzR
-        float radial(vec2 pos, float radius)
-        {
-            float result = length(pos)-radius;
-            result = fract(result*1.0);
-            float result2 = 1.0 - result;
-            float fresult = result * result2;
-            fresult = pow((fresult*3.),7.);
-            return fresult;
-        }
-
-				void main() {
-          vec2 c_uv = vUv * 2.0 - 1.0;
-          vec2 o_uv = vUv * 0.8;
-          float gradient = radial(c_uv, time*0.8);
-          vec2 fuv = mix(vUv,o_uv,gradient);
-					pc_fragColor = texture(diffuse, fuv);
-        }
-      `,
+			vertexShader: vert,
+			fragmentShader: frag,
 			glslVersion: THREE.GLSL3,
 		} );
 		screen.material.uniforms.diffuse.value = renderTarget.texture;
+		// screen.material.uniforms.past_scene.value = pastScene.texture;
+		// screen.material.uniforms.present_scene.value = present.texture;
+		// screen.material.uniforms.future_scene.value = futureScene.texture;
 
 		return [ screenCamera, screenScene, screen, renderTarget ];
 
@@ -95,15 +76,31 @@ const usePostProcess = () => {
 
 	}, [ dpr, size, renderTarget ] );
 
-	useFrame( ( { scene, camera, gl }, delta ) => {
+	useFrame( ( { scene, camera, gl } ) => {
 
+		// if ( ! present ) return;
+		// console.log( present?.gl );
 		gl.setRenderTarget( renderTarget );
 		gl.render( scene, camera );
 
 		gl.setRenderTarget( null );
-		if ( Boolean( screen ) ) screen.material.uniforms.time.value += delta;
+		if ( Boolean( screen ) ) screen.material.uniforms.time.value += DELTA;
 
 		gl.render( screenScene, screenCamera );
+
+		if ( past && past.gl && past.scene && past.camera ) {
+
+			past.gl.render( past.scene, past.camera );
+			past.gl.render( screenScene, screenCamera );
+
+		}
+
+		if ( future && future.gl && future.scene && future.camera ) {
+
+			future.gl.render( future.scene, future.camera );
+			future.gl.render( screenScene, screenCamera );
+
+		}
 
 	}, 1 );
 	return null;

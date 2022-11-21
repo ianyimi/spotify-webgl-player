@@ -15,12 +15,12 @@ type VintageScreenProps = {
   url: string,
   count?: number,
   intensity?: number,
-  fbo?: any
+  renderedScene?: any
 }
 
 export const useSceneMaterial = ( props: VintageScreenProps ) => {
 
-	const { url, count = 0, intensity = 200, fbo } = props;
+	const { url, count = 0, intensity = 200, renderedScene } = props;
 	const imageTex = useTexture( url );
 
 	const mat = useMemo(
@@ -32,14 +32,16 @@ export const useSceneMaterial = ( props: VintageScreenProps ) => {
 					time: new Uniform( 0 ),
 					intensity: new Uniform( intensity ),
 					resolution: new Uniform( new THREE.Vector2( window.innerWidth, window.innerHeight ) ),
-					backgroundImage: new Uniform( fbo ? fbo : imageTex ),
+					backgroundImage: new Uniform( imageTex ),
+					renderedScene: new Uniform( renderedScene ?? null ),
+					altScene: new Uniform( renderedScene ? 1 : 0 ),
 				},
 				vertexShader: vert,
 				fragmentShader: frag,
 				side: DoubleSide,
 				fog: true
 			} ),
-		[ frag, vert, url, imageTex, count, intensity, fbo ]
+		[ frag, vert, url, imageTex, count, intensity, renderedScene ]
 	);
 
 	return mat;

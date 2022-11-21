@@ -10,6 +10,8 @@ import { useVintageScreenMaterial } from "../shaders/vintageScreen";
 import { useSceneMaterial } from "../shaders/scene";
 import { useRouter } from "next/router";
 import { useFrame, useThree, createPortal } from "@react-three/fiber";
+import usePostProcess from "@/templates/hooks/usePostprocess";
+import { useSceneStore } from "@/hooks/useStore";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -46,30 +48,66 @@ export default function Model( props: VintageTelevisionProps ) {
 	useCursor( hovered );
 
 	const ref = useRef();
-	const fbo = useFBO();
-	const { events } = useThree();
+	const fbo = useRef( useFBO() );
+	const dummyFBO = useFBO();
+	const { events, gl, scene: originScene, camera: originCamera } = useThree();
+	const addedScene = useRef( false );
+	const [ addContext, forward ] = useSceneStore( state => [ state.addContext, state.forward ] );
 	// The portal will render into this scene
 	const [ scene ] = useState( () => new THREE.Scene() );
 	// We have our own camera in here, separate from the default
 	const [ camera ] = useState( () => new THREE.PerspectiveCamera( 50, 1, 0.1, 1000 ) );
-	const tvMat2 = useSceneMaterial( { url: url, intensity: intensity, fbo: children ? fbo.texture : undefined } );
+	const focus = useRef( false );
+	const tvMat2 = useSceneMaterial( {
+		url: url,
+		intensity: intensity,
+		renderedScene: children ? fbo.current.texture : undefined
+	} );
 
 	useEffect( () => {
 
 		camera.aspect = 0.5 / 0.42;
 		camera.updateProjectionMatrix();
+		// addContext( fbo, scene, camera );
 
 	}, [] );
 
+	// usePostProcess();
+
 	useFrame( ( state ) => {
 
-		// Copy the default cameras whereabous
-		camera.position.copy( state.camera.position );
-		camera.rotation.copy( state.camera.rotation );
-		camera.scale.copy( state.camera.scale );
+		// Copy the default cameras whereabouts
+		// camera.position.copy( state.camera.position );
+		// camera.rotation.copy( state.camera.rotation );
+		// camera.scale.copy( state.camera.scale );
 		// Render into a WebGLRenderTarget as a texture (the FBO above)
-		state.gl.clearColor();
-		state.gl.setRenderTarget( fbo );
+		// state.gl.clearColor();
+		// state.gl.setRenderTarget( fbo );
+		// console.log( state.previousRoot );
+		if ( hovered ) {
+
+			// const temp;
+			// addContext();
+			// forward();
+
+			// state.gl.setRenderTarget( state?.previousRoot?.gl?.renderTarget );
+			// gl.setRenderTarget( fbo.current );
+			// gl.setRenderTarget( null );
+			// gl.render( scene, camera );
+			// gl.setRenderTarget( null );
+			// gl.render( originScene, originCamera );
+			// gl.setRenderTarget( null );
+			tvMat2.uniforms.altScene.value = 1;
+
+		} else {
+
+			// state.gl.setRenderTarget( fbo.current );
+			tvMat2.uniforms.altScene.value = 0;
+
+		}
+
+
+		state.gl.setRenderTarget( fbo.current );
 		state.gl.render( scene, camera );
 		state.gl.setRenderTarget( null );
 
@@ -92,11 +130,22 @@ export default function Model( props: VintageTelevisionProps ) {
 
 	}, [] );
 
+	const connect = useCallback( ( event, state, previous ) => {
+
+	}, [] );
+
+	const handleClick = ( err ) => {
+
+		// ( route != null ) && router.push( route );
+		focus.current = true;
+
+	};
+
 	return (
 		<group ref={group} {...restProps} dispose={null}>
 			<group
 				name="Scene"
-				onClick={() => ( route != null ) && router.push( route )}
+				onClick={( e ) => handleClick( e )}
 				onPointerOver={() => hover( true )}
 				onPointerOut={() => hover( false )}
 			>
@@ -117,6 +166,8 @@ export default function Model( props: VintageTelevisionProps ) {
 					</mesh>
 					{children && createPortal( children, scene, {
 						camera,
+						scene,
+						gl,
 						events: { compute, priority: events.priority - 1 }
 					} )}
 				</mesh>

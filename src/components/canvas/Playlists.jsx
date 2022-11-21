@@ -2,6 +2,7 @@ import VintageTelevision from "public/models/VintageTelevision";
 import { ScrollState } from "@/templates/Scroll";
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import PortalScene from "./PortalScene";
 
 const ERROR_IMAGE_URL = "https://dqeczc7c9n9n1.cloudfront.net/images/404.png";
 
@@ -15,7 +16,11 @@ export default function Playlists( props ) {
 
 	for ( let z = 0, i = 0; z < Math.floor( playlists.length / rowLength ); z ++ ) {
 
+		// for ( let z = 0, i = 0; z < 1; z ++ ) {
+
 		for ( let x = 0; x < rowLength; x ++ ) {
+
+			// for ( let x = 0; x < 1; x ++ ) {
 
 			if ( i < playlists.length ) {
 
@@ -29,10 +34,7 @@ export default function Playlists( props ) {
 						url={playlist?.images[ 0 ]?.url ?? ERROR_IMAGE_URL}
 						intensity={100}
 					>
-						{/*<mesh>*/}
-						{/*	<boxGeometry args={[ 1, 1 ]}/>*/}
-						{/*	<meshBasicMaterial color="green"/>*/}
-						{/*</mesh>*/}
+						<PortalScene/>
 					</VintageTelevision>
 				);
 
@@ -51,7 +53,7 @@ export default function Playlists( props ) {
 			// group.current.position.x = ScrollState.progress * - 4.95 * playlists.length;
 			// group.current.position.x = ScrollState.progress * - 8.95;
 			// group.current.position.z = ScrollState.progress * - 14.95;
-			group.current.position.z -= DELTA * 5;
+			// group.current.position.z -= DELTA * 5;
 
 			if ( group.current.position.z < - playlists.length ) {
 

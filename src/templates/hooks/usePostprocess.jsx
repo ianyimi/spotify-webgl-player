@@ -40,8 +40,6 @@ const usePostProcess = () => {
 		const renderTarget = new THREE.WebGLRenderTarget( 512, 512, { samples: 4, encoding: gl.encoding } );
 		renderTarget.depthTexture = new THREE.DepthTexture(); // fix depth issues
 
-		// setPast( renderTarget, scene, camera );
-
 		// use ShaderMaterial for linearToOutputTexel
 		screen.material = new THREE.RawShaderMaterial( {
 			uniforms: {
@@ -76,8 +74,6 @@ const usePostProcess = () => {
 	useFrame( ( { scene, camera, gl } ) => {
 
 		screen.material.uniforms.active_scene.value = activeScene;
-		// if ( ! present ) return;
-		// console.log( present?.gl );
 		gl.setRenderTarget( renderTarget );
 		gl.render( scene, camera );
 		gl.setRenderTarget( null );
@@ -87,31 +83,18 @@ const usePostProcess = () => {
 		if ( past && past.gl && past.scene && past.camera ) {
 
 			screen.material.uniforms.past.value = past.gl.texture;
-			// past.gl.setRenderTarget( renderTarget );
-			past.gl.render( past.scene, past.camera );
-			// past.gl.setRenderTarget( null );
-			past.gl.render( screenScene, screenCamera );
 
 		}
 
 		if ( present && present.gl && present.scene && present.camera ) {
 
 			screen.material.uniforms.present.value = present.gl.texture;
-			// present.gl.setRenderTarget( renderTarget );
-			present.gl.render( present.scene, present.camera );
-			// present.gl.setRenderTarget( null );
-			present.gl.render( screenScene, screenCamera );
 
 		}
 
 		if ( future && future.gl && future.scene && future.camera ) {
 
-			// console.log( future.gl );
 			screen.material.uniforms.future.value = future.gl.texture;
-			// future.gl.setRenderTarget( renderTarget );
-			// future.gl.render( future.scene, future.camera );
-			// future.gl.setRenderTarget( null );
-			// future.gl.render( screenScene, screenCamera );
 
 		}
 

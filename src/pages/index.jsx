@@ -4,10 +4,6 @@ import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { spotifyApi } from "@/hooks/useSpotify";
 import { fetchUserLikedPlaylists } from "../../lib/api";
-import { useSceneStore } from "@/hooks/useStore";
-import { useEffect } from "react";
-import { useThree } from "@react-three/fiber";
-import * as THREE from "three";
 
 // Dynamic import is used to prevent a payload when the website starts, that includes threejs, r3f etc..
 // WARNING ! errors might get obfuscated by using dynamic import.
@@ -41,12 +37,6 @@ Page.canvas = ( { playlists } ) => {
 				<boxGeometry args={[ 1, 1 ]}/>
 				<meshStandardMaterial color="green"/>
 			</mesh>
-			{/*<Blob/>*/}
-			{/*<Points/>*/}
-			{/*<mesh position-z={1}>*/}
-			{/*	<boxGeometry args={[ 1, 1, 1 ]}/>*/}
-			{/*	<meshStandardMaterial color="green" emmissive="green" emmissiveIntensity={1}/>*/}
-			{/*</mesh>*/}
 		</group>
 	);
 

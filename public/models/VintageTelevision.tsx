@@ -86,28 +86,12 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		}
 
-		// Render into a WebGLRenderTarget as a texture (the FBO above)
-		// state.gl.clearColor();
-		// state.gl.setRenderTarget( fbo );
-		// console.log( state.previousRoot );
 		if ( hovered ) {
 
-			// const temp;
-			// addContext();
-			// forward();
-
-			// state.gl.setRenderTarget( state?.previousRoot?.gl?.renderTarget );
-			// gl.setRenderTarget( fbo.current );
-			// gl.setRenderTarget( null );
-			// gl.render( scene, camera );
-			// gl.setRenderTarget( null );
-			// gl.render( originScene, originCamera );
-			// gl.setRenderTarget( null );
 			tvMat2.uniforms.altScene.value = 1;
 
 		} else {
 
-			// state.gl.setRenderTarget( fbo.current );
 			tvMat2.uniforms.altScene.value = 0;
 
 		}

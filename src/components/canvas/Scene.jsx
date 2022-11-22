@@ -1,5 +1,5 @@
 import { Canvas, extend } from '@react-three/fiber';
-import { Effects, Preload } from '@react-three/drei';
+import { Effects, OrbitControls, Preload } from '@react-three/drei';
 import { HalfFloatType, LinearEncoding, Vector2 } from "three";
 import { AdaptiveToneMappingPass } from "three/examples/jsm/postprocessing/AdaptiveToneMappingPass";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
@@ -24,6 +24,7 @@ export default function Scene( { children, ...props } ) {
 			<RenderPipeline/>
 			{children}
 			<Preload all/>
+			<OrbitControls/>
 		</Canvas>
 	);
 

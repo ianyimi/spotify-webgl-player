@@ -51,8 +51,8 @@ export default function Model( props: VintageTelevisionProps ) {
 	const fbo = useRef( useFBO() );
 	const dummyFBO = useFBO();
 	const { events, gl, scene: originScene, camera: originCamera } = useThree();
-	const addedScene = useRef( false );
-	const [ addContext, forward ] = useSceneStore( state => [ state.addContext, state.forward ] );
+	const cameraInit = useRef( false );
+	const [ setFuture, setActiveScene ] = useSceneStore( state => [ state.setFuture, state.setActiveScene ] );
 	// The portal will render into this scene
 	const [ scene ] = useState( () => new THREE.Scene() );
 	// We have our own camera in here, separate from the default
@@ -77,9 +77,15 @@ export default function Model( props: VintageTelevisionProps ) {
 	useFrame( ( state ) => {
 
 		// Copy the default cameras whereabouts
-		// camera.position.copy( state.camera.position );
-		// camera.rotation.copy( state.camera.rotation );
-		// camera.scale.copy( state.camera.scale );
+		if ( ! cameraInit.current ) {
+
+			camera.position.copy( state.camera.position );
+			camera.rotation.copy( state.camera.rotation );
+			camera.scale.copy( state.camera.scale );
+			cameraInit.current = true;
+
+		}
+
 		// Render into a WebGLRenderTarget as a texture (the FBO above)
 		// state.gl.clearColor();
 		// state.gl.setRenderTarget( fbo );
@@ -138,6 +144,9 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		// ( route != null ) && router.push( route );
 		focus.current = true;
+		setFuture( fbo.current, scene, camera );
+		setActiveScene( 2 );
+		// forward();
 
 	};
 

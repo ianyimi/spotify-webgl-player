@@ -2,9 +2,9 @@ precision highp float;
 out highp vec4 pc_fragColor;
 uniform float active_scene;
 uniform sampler2D diffuse;
-uniform sampler2D past_scene;
-uniform sampler2D present_scene;
-uniform sampler2D future_scene;
+uniform sampler2D past;
+uniform sampler2D present;
+uniform sampler2D future;
 uniform float time;
 in vec2 vUv;
 
@@ -28,8 +28,8 @@ void main() {
   pc_fragColor = texture(diffuse, fuv);
 
   if (active_scene == 2.0) {
-    vec4 scene_color = texture(future_scene, fuv);
-    pc_fragColor = texture(future_scene, fuv);
+    vec4 scene_color = texture(future, fuv);
+    pc_fragColor = texture(future, fuv);
     //    pc_fragColor.rgb = mix(pc_fragColor.rgb, scene_color.rgb, gradient);
   }
   //  pc_fragColor2 = texture(future_scene, fuv);

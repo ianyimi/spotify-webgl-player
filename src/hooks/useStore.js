@@ -7,6 +7,7 @@ export const useSceneStore = create( ( set, get ) => {
 	// renderTarget.depthTexture = new THREE.DepthTexture();
 
 	return {
+		activeScene: 1,
 		past: { gl: null, scene: null, camera: null },
 		present: { gl: null, scene: null, camera: null },
 		future: { gl: null, scene: null, camera: null },
@@ -15,13 +16,13 @@ export const useSceneStore = create( ( set, get ) => {
 		// 	set( { pastScene: get().presentScene, presentScene: scene, futureScene: null } );
 		//
 		// },
-		addContext: ( gl, scene, camera ) => {
+		setPast: ( gl, scene, camera ) => set( { past: { gl: gl, scene: scene, camera: camera } } ),
+		setPresent: ( gl, scene, camera ) => set( { present: { gl: gl, scene: scene, camera: camera } } ),
+		setFuture: ( gl, scene, camera ) => set( { future: { gl: gl, scene: scene, camera: camera } } ),
+		setActiveScene: ( scene ) => set( { activeScene: scene } ),
 
-			set( { futureScene: { gl: gl, scene: scene, camera: camera } } );
-
-		},
-		forward: () => set( { past: get()?.present, present: get()?.future, future: null } ),
-		back: () => set( { future: get()?.present, present: get()?.past, past: null } )
+		// forward: () => set( { past: get()?.present, present: get()?.future, future: null } ),
+		// back: () => set( { future: get()?.present, present: get()?.past, past: null } )
 
 	};
 

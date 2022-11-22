@@ -25,7 +25,7 @@ const DELTA = 0.003;
 // USAGE: Simply call usePostprocess hook in your r3f component to apply the shader to the canvas as a postprocess effect
 const usePostProcess = () => {
 
-	const [ past, present, future, addScene, forward ] = useSceneStore( state => [ state.past, state.present, state.future, state.addContext, state.forward ] );
+	const [ past, present, future, setPast, activeScene ] = useSceneStore( state => [ state.past, state.present, state.future, state.setPast, state.activeScene ] );
 	const [ { dpr }, size, gl ] = useThree( ( s ) => [ s.viewport, s.size, s.gl ] );
 
 	// console.log( present );
@@ -40,17 +40,17 @@ const usePostProcess = () => {
 		const renderTarget = new THREE.WebGLRenderTarget( 512, 512, { samples: 4, encoding: gl.encoding } );
 		renderTarget.depthTexture = new THREE.DepthTexture(); // fix depth issues
 
-		addScene( renderTarget );
+		// setPast( renderTarget, scene, camera );
 
 		// use ShaderMaterial for linearToOutputTexel
 		screen.material = new THREE.RawShaderMaterial( {
 			uniforms: {
 				// 0 - past; 1 - present; 2 - future
-				active_scene: new Uniform( 1 ),
+				active_scene: new Uniform( activeScene ),
 				diffuse: new Uniform( null ),
-				past_scene: new Uniform( null ),
-				present_scene: new Uniform( null ),
-				future_scene: new Uniform( null ),
+				past: new Uniform( null ),
+				present: new Uniform( null ),
+				future: new Uniform( null ),
 				time: new Uniform( 0 ),
 			},
 			vertexShader: vert,
@@ -58,9 +58,6 @@ const usePostProcess = () => {
 			glslVersion: THREE.GLSL3,
 		} );
 		screen.material.uniforms.diffuse.value = renderTarget.texture;
-		// screen.material.uniforms.past_scene.value = pastScene.texture;
-		// screen.material.uniforms.present_scene.value = present.texture;
-		// screen.material.uniforms.future_scene.value = futureScene.texture;
 
 		return [ screenCamera, screenScene, screen, renderTarget ];
 
@@ -78,27 +75,43 @@ const usePostProcess = () => {
 
 	useFrame( ( { scene, camera, gl } ) => {
 
+		screen.material.uniforms.active_scene.value = activeScene;
 		// if ( ! present ) return;
 		// console.log( present?.gl );
 		gl.setRenderTarget( renderTarget );
 		gl.render( scene, camera );
-
 		gl.setRenderTarget( null );
 		if ( Boolean( screen ) ) screen.material.uniforms.time.value += DELTA;
-
 		gl.render( screenScene, screenCamera );
 
 		if ( past && past.gl && past.scene && past.camera ) {
 
+			screen.material.uniforms.past.value = past.gl.texture;
+			// past.gl.setRenderTarget( renderTarget );
 			past.gl.render( past.scene, past.camera );
+			// past.gl.setRenderTarget( null );
 			past.gl.render( screenScene, screenCamera );
+
+		}
+
+		if ( present && present.gl && present.scene && present.camera ) {
+
+			screen.material.uniforms.present.value = present.gl.texture;
+			// present.gl.setRenderTarget( renderTarget );
+			present.gl.render( present.scene, present.camera );
+			// present.gl.setRenderTarget( null );
+			present.gl.render( screenScene, screenCamera );
 
 		}
 
 		if ( future && future.gl && future.scene && future.camera ) {
 
-			future.gl.render( future.scene, future.camera );
-			future.gl.render( screenScene, screenCamera );
+			// console.log( future.gl );
+			screen.material.uniforms.future.value = future.gl.texture;
+			// future.gl.setRenderTarget( renderTarget );
+			// future.gl.render( future.scene, future.camera );
+			// future.gl.setRenderTarget( null );
+			// future.gl.render( screenScene, screenCamera );
 
 		}
 

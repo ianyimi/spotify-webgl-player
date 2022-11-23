@@ -33,7 +33,7 @@ type VintageTelevisionProps = {
 } & JSX.IntrinsicElements['group']
 
 const glassMat = new THREE.MeshPhysicalMaterial( { roughness: 0, transmission: 1, thickness: 0.1 } );
-const FILE_URL = "https://dqeczc7c9n9n1.cloudfront.net/models/vintageTelevision-1668539957/vintageTelevision.glb.gz";
+const FILE_URL = "https://dqeczc7c9n9n1.cloudfront.net/models/vintageTelevision-1669157713/vintageTelevision.glb.gz";
 
 export default function Model( props: VintageTelevisionProps ) {
 

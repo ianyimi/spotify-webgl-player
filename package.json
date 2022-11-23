@@ -23,6 +23,7 @@
     "@react-three/drei": "^9.40.0",
     "@react-three/fiber": "^8.9.0",
     "@studio-freight/lenis": "^0.2.21",
+    "dat.gui": "^0.7.9",
     "glsl-random": "^0.0.5",
     "maath": "^0.4.2",
     "next": "^13.0.1",
@@ -34,10 +35,12 @@
     "spotify-web-api-node": "^5.0.2",
     "three": "^0.146.0",
     "three-stdlib": "^2.17.3",
+    "tweakpane": "^3.1.0",
     "zustand": "^4.1.4"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.3.1",
+    "@tweakpane/core": "^1.1.0",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
     "autoprefixer": "^10.4.12",

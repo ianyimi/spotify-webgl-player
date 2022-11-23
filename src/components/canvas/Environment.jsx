@@ -11,11 +11,10 @@ export default function Environment( props ) {
 	const [ present, setPresent, setActiveScene ] = useSceneStore( state => [ state.present, state.setPresent, state.setActiveScene ] );
 
 	usePostProcess();
-	console.log( "test", present?.camera );
 	useEffect( () => {
 
 		camera && camera.lookAt( camera.position.x, 0, 0 );
-		console.log( "setPresent", gl );
+		// console.log( "setPresent", gl );
 		setPresent( gl, scene, camera );
 		// setActiveScene( 1 );
 		// forward();

@@ -11,7 +11,7 @@ import { useSceneMaterial } from "../shaders/scene";
 import { useRouter } from "next/router";
 import { useFrame, useThree, createPortal } from "@react-three/fiber";
 import usePostProcess from "@/templates/hooks/usePostprocess";
-import { useSceneStore } from "@/hooks/useStore";
+import { useClientStore } from "@/hooks/useStore";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -52,7 +52,7 @@ export default function Model( props: VintageTelevisionProps ) {
 	const dummyFBO = useFBO();
 	const { events, gl, scene: originScene, camera: originCamera } = useThree();
 	const cameraInit = useRef( false );
-	const [ setFuture, setActiveScene ] = useSceneStore( state => [ state.setFuture, state.setActiveScene ] );
+	const [ setFuture, setActiveScene ] = useClientStore( state => [ state.setFuture, state.setActiveScene ] );
 	// The portal will render into this scene
 	const [ scene ] = useState( () => new THREE.Scene() );
 	// We have our own camera in here, separate from the default
@@ -124,8 +124,9 @@ export default function Model( props: VintageTelevisionProps ) {
 
 	}, [] );
 
-	const handleClick = ( err ) => {
+	const handleClick = ( e ) => {
 
+		// e.preventDefault();
 		// ( route != null ) && router.push( route );
 		focus.current = true;
 		setFuture( fbo.current, scene, camera );

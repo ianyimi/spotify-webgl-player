@@ -23,7 +23,6 @@
     "@react-three/drei": "^9.40.0",
     "@react-three/fiber": "^8.9.0",
     "@studio-freight/lenis": "^0.2.21",
-    "dat.gui": "^0.7.9",
     "glsl-random": "^0.0.5",
     "maath": "^0.4.2",
     "next": "^13.0.1",

@@ -3,12 +3,12 @@ import { useThree } from "@react-three/fiber";
 import { Object3D } from "three";
 import { useEffect } from "react";
 import usePostProcess from "@/templates/hooks/usePostprocess";
-import { useSceneStore } from "@/hooks/useStore";
+import { useClientStore } from "@/hooks/useStore";
 
 export default function Environment( props ) {
 
 	const { scene, camera, gl } = useThree();
-	const [ present, setPresent, setActiveScene ] = useSceneStore( state => [ state.present, state.setPresent, state.setActiveScene ] );
+	const [ present, setPresent, setActiveScene ] = useClientStore( state => [ state.present, state.setPresent, state.setActiveScene ] );
 
 	usePostProcess();
 	useEffect( () => {

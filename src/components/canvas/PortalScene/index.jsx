@@ -1,14 +1,14 @@
 import { useThree } from "@react-three/fiber";
 import Points from "../Points";
 import { useState } from "react";
-import { useSceneStore } from "@/hooks/useStore";
+import { useClientStore } from "@/hooks/useStore";
 import { OrbitControls } from "@react-three/drei";
 
 export default function PortalScene( props ) {
 
 	const { camera, scene } = useThree();
 	const [ hovered, hover ] = useState( false );
-	const activeScene = useSceneStore( state => state.activeScene );
+	const activeScene = useClientStore( state => state.activeScene );
 	// console.log( "active Scene: ", activeScene );
 	// camera.position.set( 0, 1, 5 );
 	// camera.lookAt( 0, 1, 0 );

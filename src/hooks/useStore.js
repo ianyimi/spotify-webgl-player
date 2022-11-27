@@ -1,7 +1,7 @@
 import create from "zustand";
 import * as THREE from "three";
 
-export const useSceneStore = create( ( set, get ) => {
+export const useClientStore = create( ( set, get ) => {
 
 	// const renderTarget = new THREE.WebGLRenderTarget( 512, 512, { samples: 4, encoding: gl.encoding } );
 	// renderTarget.depthTexture = new THREE.DepthTexture();
@@ -11,6 +11,7 @@ export const useSceneStore = create( ( set, get ) => {
 		past: { gl: null, scene: null, camera: null },
 		present: { gl: null, scene: null, camera: null },
 		future: { gl: null, scene: null, camera: null },
+		paneSettings: { scale: 0.5 },
 		// setPresentScene: ( scene ) => {
 		//
 		// 	set( { pastScene: get().presentScene, presentScene: scene, futureScene: null } );

@@ -9,8 +9,8 @@ import { fetchUserLikedPlaylists } from "../../lib/api";
 // WARNING ! errors might get obfuscated by using dynamic import.
 // If something goes wrong go back to a static import to show the error.
 // https://github.com/pmndrs/react-three-next/issues/49
+const Pane = dynamic( () => import( '@/components/dom/Pane' ), { ssr: false } );
 const Playlists = dynamic( () => import( '@/components/canvas/Playlists' ), { ssr: false } );
-const Blob = dynamic( () => import( '@/components/canvas/Blob' ), { ssr: false } );
 const Points = dynamic( () => import( '@/components/canvas/Points' ), { ssr: false } );
 const Environment = dynamic( () => import( '@/components/canvas/Environment' ), { ssr: false } );
 
@@ -19,6 +19,7 @@ export default function Page( { playlists } ) {
 
 	return (
 		<div>
+			<Pane/>
 			{/*<Dashboard playlists={playlists}/>*/}
 		</div>
 	);

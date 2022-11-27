@@ -1,12 +1,13 @@
 precision highp float;
 out highp vec4 pc_fragColor;
+uniform float time;
 uniform float active_scene;
 uniform float uCircleScale;
+uniform float screenAspect;
 uniform sampler2D diffuse;
 uniform sampler2D past;
 uniform sampler2D present;
 uniform sampler2D future;
-uniform float time;
 in vec2 vUv;
 
 // based on https://www.shadertoy.com/view/llGXzR
@@ -36,21 +37,24 @@ void main() {
   float gradient = radial(c_uv, time*1.8);
   vec2 fuv = mix(vUv, o_uv, gradient);
 
+  vec2  centerVec = vUv - vec2(0.5);
+
   vec4 home = texture(diffuse, vUv);
   vec4 play = texture(future, vUv);
 
 
-
-  vec2 circleUV = vUv - vec2(0.5);
-  float distance = circle(vUv, uCircleScale, 0.01);
-
+  vec2 circleUV = (vUv - vec2(0.5))*vec2(screenAspect, 1.) + vec2(0.5);
+  float circleProgress = circle(circleUV, uCircleScale, 0.25 + 0.25*uCircleScale);
 
 
-  pc_fragColor = texture(diffuse, fuv);
+
+  pc_fragColor = home;
 
   if (active_scene == 2.0) {
-    vec4 scene_color = texture(future, fuv);
-    pc_fragColor = vec4(distance);
+    play = texture(future, fuv);
+
+    vec4 final = mix(play, home, circleProgress);
+    pc_fragColor = final;
     //    pc_fragColor.rgb = mix(pc_fragColor.rgb, scene_color.rgb, gradient);
   }
   //  pc_fragColor2 = texture(future_scene, fuv);

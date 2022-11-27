@@ -6,7 +6,6 @@ import frag from "./glsl/shader.frag";
 import { Uniform } from "three";
 import { useClientStore } from "@/hooks/useStore";
 import { Pane } from "tweakpane";
-import { GUI } from "dat.gui";
 
 function getFullscreenTriangle() {
 
@@ -29,6 +28,7 @@ const usePostProcess = () => {
 
 	const [ past, present, future, paneSettings, setPast, activeScene ] = useClientStore( state => [ state.past, state.present, state.future, state.paneSettings, state.setPast, state.activeScene ] );
 	const [ { dpr }, size, gl ] = useThree( ( s ) => [ s.viewport, s.size, s.gl ] );
+
 	const [ screenCamera, screenScene, screen, renderTarget ] = useMemo( () => {
 
 		let screenScene = new THREE.Scene();
@@ -46,6 +46,7 @@ const usePostProcess = () => {
 				// 0 - past; 1 - present; 2 - future
 				active_scene: new Uniform( activeScene ),
 				uCircleScale: new Uniform( 0.5 ),
+				screenAspect: new Uniform( window.innerWidth / window.innerHeight ),
 				diffuse: new Uniform( null ),
 				past: new Uniform( null ),
 				present: new Uniform( null ),

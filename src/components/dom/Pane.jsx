@@ -12,7 +12,7 @@ export default function Page() {
 		if ( ! parent.current ) return;
 		const pane = new Pane( { title: "Transition Shader", container: parent.current } );
 
-		pane.addInput( paneSettings, "scale", { min: 0, max: 2, label: "uCircleScale" } );
+		pane.addInput( paneSettings, "scale", { min: 0, max: 3, label: "uCircleScale" } );
 		pane.refresh();
 
 	}, [] );

@@ -4,6 +4,7 @@ uniform float time;
 uniform float active_scene;
 uniform float uCircleScale;
 uniform float screenAspect;
+uniform sampler2D diffuse;
 uniform sampler2D past;
 uniform sampler2D present;
 uniform sampler2D future;
@@ -91,7 +92,8 @@ void main() {
   vec2 newUV = vUv;
   vec2 circleUV = (vUv - vec2(0.5))*vec2(screenAspect, 1.) + vec2(0.5);
 
-  float circleProgress = circle(circleUV, uCircleScale, 0.25 + 0.25*uCircleScale);
+  // keep constant sharpness for complete scene immersion
+  float circleProgress = circle(circleUV, uCircleScale, 0.03);
 
   // ripples
 
@@ -102,27 +104,24 @@ void main() {
 
   vec2 swirlDistort = noise_fbm(noiseUV*swirl)*centerVec*10.;
 
-
   // end ripples
 
   vec4 futureScene = texture(future, newUV);
-  vec4 presentScene = texture(present, newUV);
-
+  vec4 presentScene = texture(diffuse, vUv);
 
   pc_fragColor = presentScene;
 
   if (active_scene == 2.0) {
 
-    vec2 backgroundUV = newUV + 0.03*swirlDistort + centerVec * circleProgress;
+    vec2 backgroundUV = newUV + 0.03*swirlDistort;
     futureScene = texture(future, newUV);
-    presentScene = texture(present, backgroundUV);
+    presentScene = texture(diffuse, backgroundUV);
 
     vec4 final = mix(futureScene, presentScene, circleProgress);
     pc_fragColor = vec4(centerVec, 0., 1.);
     pc_fragColor = vec4(swirlDistort, 0., 1.);
     pc_fragColor = final;
-    //    pc_fragColor.rgb = mix(pc_fragColor.rgb, scene_color.rgb, gradient);
+
   }
-  //  pc_fragColor2 = texture(future_scene, fuv);
-  //  pc_fragColor = texture(present, fuv);
+
 }

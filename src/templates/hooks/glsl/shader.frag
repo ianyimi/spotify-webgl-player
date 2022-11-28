@@ -1,6 +1,7 @@
 precision highp float;
 out highp vec4 pc_fragColor;
 uniform float time;
+uniform float distortion;
 uniform float active_scene;
 uniform float uCircleScale;
 uniform float screenAspect;
@@ -113,7 +114,7 @@ void main() {
 
   if (active_scene == 2.0) {
 
-    vec2 backgroundUV = newUV + 0.03*swirlDistort;
+    vec2 backgroundUV = newUV - 0.03*distortion*swirlDistort;
     futureScene = texture(future, newUV);
     presentScene = texture(diffuse, backgroundUV);
 

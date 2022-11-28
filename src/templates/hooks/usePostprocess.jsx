@@ -52,6 +52,7 @@ const usePostProcess = () => {
 				present: new Uniform( null ),
 				future: new Uniform( null ),
 				time: new Uniform( 0 ),
+				distortion: new Uniform( 1 )
 			},
 			vertexShader: vert,
 			fragmentShader: frag,
@@ -78,6 +79,7 @@ const usePostProcess = () => {
 
 		screen.material.uniforms.active_scene.value = activeScene;
 		screen.material.uniforms.uCircleScale.value = paneSettings.scale;
+		screen.material.uniforms.uCircleScale.distortion = paneSettings.distortion;
 		if ( Boolean( screen ) ) screen.material.uniforms.time.value += DELTA;
 
 		gl.setRenderTarget( renderTarget );

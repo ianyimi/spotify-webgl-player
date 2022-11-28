@@ -11,7 +11,7 @@ export const useClientStore = create( ( set, get ) => {
 		past: { gl: null, scene: null, camera: null, rig: null },
 		present: { gl: null, scene: null, camera: null, rig: null },
 		future: { gl: null, scene: null, camera: null, rig: null },
-		paneSettings: { scale: 0.0 },
+		paneSettings: { scale: 0.0, distortion: 0.0 },
 		// setPresentScene: ( scene ) => {
 		//
 		// 	set( { pastScene: get().presentScene, presentScene: scene, futureScene: null } );

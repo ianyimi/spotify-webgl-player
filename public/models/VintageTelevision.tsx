@@ -27,19 +27,20 @@ type GLTFResult = GLTF & {
 type VintageTelevisionProps = {
   intensity?: number,
   route?: string,
-  url: string,
+  url?: string,
   index?: number,
   children?: ReactElement[]
 } & JSX.IntrinsicElements['group']
 
 const glassMat = new THREE.MeshPhysicalMaterial( { roughness: 0, transmission: 1, thickness: 0.1 } );
 const FILE_URL = "https://dqeczc7c9n9n1.cloudfront.net/models/vintageTelevision-1669157713/vintageTelevision.glb.gz";
+const URL_NOT_FOUND = "https://dqeczc7c9n9n1.cloudfront.net/images/404.png";
 
 export default function Model( props: VintageTelevisionProps ) {
 
 	const router = useRouter();
 	const [ hovered, hover ] = useState( false );
-	const { url, route, index = 0, intensity = 200, children, ...restProps } = props;
+	const { url = URL_NOT_FOUND, route, index = 0, intensity = 200, children, ...restProps } = props;
 	const group = useRef<THREE.Group>();
 	const { nodes, materials } = useGLTF( FILE_URL ) as GLTFResult;
 	const tvMat = useVintageScreenMaterial( { url: url, intensity: intensity } );
@@ -117,10 +118,6 @@ export default function Model( props: VintageTelevisionProps ) {
 		// We take that hits uv coords, set up this layers raycaster, et voilà, we have raycasting with perspective shift
 		const uv = intersection.uv;
 		state.raycaster.setFromCamera( state.pointer.set( uv.x * 2 - 1, uv.y * 2 - 1 ), camera );
-
-	}, [] );
-
-	const connect = useCallback( ( event, state, previous ) => {
 
 	}, [] );
 

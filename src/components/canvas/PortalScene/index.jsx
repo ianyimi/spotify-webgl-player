@@ -17,11 +17,11 @@ export default function PortalScene( props ) {
 
 	return (
 		<group {...props}>
-			<Points/>
-			{/*<mesh onMouseOver={() => hover( true )} onMouseOut={() => hover( false )}>*/}
-			{/*	<boxGeometry args={[ 1, 1 ]}/>*/}
-			{/*	<meshBasicMaterial color={hovered ? "pink" : "green"}/>*/}
-			{/*</mesh>*/}
+			{/*<Points/>*/}
+			<mesh onMouseOver={() => hover( true )} onMouseOut={() => hover( false )}>
+				<boxGeometry args={[ 1, 1 ]}/>
+				<meshBasicMaterial color={hovered ? "pink" : "green"}/>
+			</mesh>
 			{activeScene === 2 && <OrbitControls/>}
 		</group>
 	);

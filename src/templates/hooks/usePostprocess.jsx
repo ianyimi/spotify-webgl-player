@@ -47,7 +47,6 @@ const usePostProcess = () => {
 				active_scene: new Uniform( activeScene ),
 				uCircleScale: new Uniform( 0.5 ),
 				screenAspect: new Uniform( window.innerWidth / window.innerHeight ),
-				diffuse: new Uniform( null ),
 				past: new Uniform( null ),
 				present: new Uniform( null ),
 				future: new Uniform( null ),
@@ -57,7 +56,7 @@ const usePostProcess = () => {
 			fragmentShader: frag,
 			glslVersion: THREE.GLSL3,
 		} );
-		screen.material.uniforms.diffuse.value = renderTarget.texture;
+		screen.material.uniforms.present.value = renderTarget.texture;
 
 		return [ screenCamera, screenScene, screen, renderTarget ];
 

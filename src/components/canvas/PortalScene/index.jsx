@@ -22,7 +22,7 @@ export default function PortalScene( props ) {
 				<boxGeometry args={[ 1, 1 ]}/>
 				<meshBasicMaterial color={hovered ? "pink" : "green"}/>
 			</mesh>
-			{activeScene === 2 && <OrbitControls/>}
+			<OrbitControls/>
 		</group>
 	);
 

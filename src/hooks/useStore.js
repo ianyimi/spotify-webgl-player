@@ -8,18 +8,18 @@ export const useClientStore = create( ( set, get ) => {
 
 	return {
 		activeScene: 1,
-		past: { gl: null, scene: null, camera: null },
-		present: { gl: null, scene: null, camera: null },
-		future: { gl: null, scene: null, camera: null },
+		past: { gl: null, scene: null, camera: null, rig: null },
+		present: { gl: null, scene: null, camera: null, rig: null },
+		future: { gl: null, scene: null, camera: null, rig: null },
 		paneSettings: { scale: 0.0 },
 		// setPresentScene: ( scene ) => {
 		//
 		// 	set( { pastScene: get().presentScene, presentScene: scene, futureScene: null } );
 		//
 		// },
-		setPast: ( gl, scene, camera ) => set( { past: { gl: gl, scene: scene, camera: camera } } ),
-		setPresent: ( gl, scene, camera ) => set( { present: { gl: gl, scene: scene, camera: camera } } ),
-		setFuture: ( gl, scene, camera ) => set( { future: { gl: gl, scene: scene, camera: camera } } ),
+		setPast: ( gl, scene, camera, rig ) => set( { past: { gl: gl, scene: scene, camera: camera, rig: rig } } ),
+		setPresent: ( gl, scene, camera, rig ) => set( { present: { gl: gl, scene: scene, camera: camera, rig: rig } } ),
+		setFuture: ( gl, scene, camera, rig ) => set( { future: { gl: gl, scene: scene, camera: camera, rig: rig } } ),
 		setActiveScene: ( scene ) => set( { activeScene: scene } ),
 
 		// forward: () => set( { past: get()?.present, present: get()?.future, future: null } ),

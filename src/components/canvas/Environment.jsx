@@ -1,25 +1,36 @@
 import { MeshReflectorMaterial } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { Object3D } from "three";
-import { useEffect } from "react";
+import { Vector3, Object3D } from "three";
+import { useEffect, useMemo, useRef } from "react";
 import usePostProcess from "@/templates/hooks/usePostprocess";
 import { useClientStore } from "@/hooks/useStore";
+import { CameraRig, FreeMovementControls } from "three-story-controls";
 
 export default function Environment( props ) {
 
 	const { scene, camera, gl } = useThree();
 	const [ present, setPresent, setActiveScene ] = useClientStore( state => [ state.present, state.setPresent, state.setActiveScene ] );
+	const rig = useMemo( () => {
+
+		return new CameraRig( camera, scene );
+
+	}, [ scene, camera, gl ] );
 
 	usePostProcess();
 	useEffect( () => {
 
 		camera && camera.lookAt( camera.position.x, 0, 0 );
+		// const rig =
+		// const controls = new FreeMovementControls( rig );
+		// controls.enable();
 		// console.log( "setPresent", gl );
-		setPresent( gl, scene, camera );
+		const { position, quaternion } = rig.getWorldCoordinates();
+		rig.flyTo( new Vector3( 0, 1, 20 ), quaternion, 0 );
+		setPresent( gl, scene, camera, rig );
 		// setActiveScene( 1 );
 		// forward();
 
-	}, [ gl, scene ] );
+	}, [] );
 
 	return (
 		<group {...props}>

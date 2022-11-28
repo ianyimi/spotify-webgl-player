@@ -28,7 +28,7 @@ export default function Page( { playlists } ) {
 
 // Canvas components go here
 // It will receive same props as the Page component (from getStaticProps, etc.)
-Page.canvas = ( { playlists } ) => {
+Page.canvas = ( { playlists, login } ) => {
 
 	return (
 		<group>

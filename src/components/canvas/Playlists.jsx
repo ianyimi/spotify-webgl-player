@@ -16,11 +16,11 @@ export default function Playlists( props ) {
 
 	// for ( let z = 0, i = 0; z < Math.floor( playlists.length / rowLength ); z ++ ) {
 
-	for ( let z = 0, i = 0; z < 1; z ++ ) {
+	for ( let z = 0, i = 0; z < 3; z ++ ) {
 
 		// for ( let x = 0; x < rowLength; x ++ ) {
 
-		for ( let x = 0; x < 1; x ++ ) {
+		for ( let x = 0; x < 3; x ++ ) {
 
 			if ( i < playlists.length ) {
 

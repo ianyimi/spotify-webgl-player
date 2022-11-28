@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { useFrame, useThree, createPortal } from "@react-three/fiber";
 import usePostProcess from "@/templates/hooks/usePostprocess";
 import { useClientStore } from "@/hooks/useStore";
+import { CameraRig, CameraAction } from "three-story-controls";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -53,11 +54,12 @@ export default function Model( props: VintageTelevisionProps ) {
 	const dummyFBO = useFBO();
 	const { events, gl, scene: originScene, camera: originCamera } = useThree();
 	const cameraInit = useRef( false );
-	const [ setFuture, setActiveScene ] = useClientStore( state => [ state.setFuture, state.setActiveScene ] );
+	const [ activeScene, present, setFuture, setActiveScene ] = useClientStore( state => [ state.activeScene, state.present, state.setFuture, state.setActiveScene ] );
 	// The portal will render into this scene
 	const [ scene ] = useState( () => new THREE.Scene() );
 	// We have our own camera in here, separate from the default
 	const [ camera ] = useState( () => new THREE.PerspectiveCamera( 50, 1, 0.1, 1000 ) );
+	const cameraRig = useRef( new CameraRig( camera, scene ) );
 	const focus = useRef( false );
 	const tvMat2 = useSceneMaterial( {
 		url: url,
@@ -89,7 +91,7 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		if ( hovered ) {
 
-			tvMat2.uniforms.altScene.value = 1;
+			// tvMat2.uniforms.altScene.value = 1;
 
 		} else {
 
@@ -125,9 +127,11 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		// e.preventDefault();
 		// ( route != null ) && router.push( route );
-		focus.current = true;
-		setFuture( fbo.current, scene, camera );
-		setActiveScene( 2 );
+		if ( activeScene === 2 ) return;
+		setFuture( fbo.current, scene, camera, cameraRig.current );
+		const { position, quaternion } = present.rig.getWorldCoordinates();
+		present.rig.flyTo( new THREE.Vector3( position.x, position.y, position.z - 5 ), quaternion, 2 );
+		setTimeout( () => setActiveScene( 2 ), 1000 );
 		// forward();
 
 	};

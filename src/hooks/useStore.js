@@ -22,6 +22,7 @@ export const useClientStore = create( ( set, get ) => {
 		setFuture: ( gl, scene, camera, rig ) => set( { future: { gl: gl, scene: scene, camera: camera, rig: rig } } ),
 		setActiveScene: ( scene ) => set( { activeScene: scene } ),
 
+
 		// forward: () => set( { past: get()?.present, present: get()?.future, future: null } ),
 		// back: () => set( { future: get()?.present, present: get()?.past, past: null } )
 

@@ -114,7 +114,7 @@ void main() {
 
   if (active_scene == 2.0) {
 
-    vec2 backgroundUV = newUV - 0.03*distortion*swirlDistort;
+    vec2 backgroundUV = newUV + 0.03*distortion*swirlDistort;
     futureScene = texture(future, newUV);
     presentScene = texture(diffuse, backgroundUV);
 

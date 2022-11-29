@@ -92,7 +92,7 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		if ( hovered ) {
 
-			// tvMat2.uniforms.altScene.value = 1;
+			tvMat2.uniforms.altScene.value = 1;
 
 		} else {
 
@@ -131,19 +131,19 @@ export default function Model( props: VintageTelevisionProps ) {
 		if ( activeScene === 2 ) return;
 		setFuture( fbo.current, scene, camera, cameraRig.current );
 		const { position: p1, quaternion: q1 } = present.rig.getWorldCoordinates();
-		present.rig.flyTo( new THREE.Vector3( p1.x, p1.y, p1.z - 5 ), q1, 2 );
+		present.rig.flyTo( new THREE.Vector3( p1.x, p1.y, p1.z - 5 ), q1, 2, "power3.inOut" );
 		setTimeout( () => {
 
 			setActiveScene( 2 );
-			gsap.to( paneSettings, { scale: 3, distortion: 1, duration: 2, ease: "power3.inOut" } );
+			gsap.to( paneSettings, { scale: 3, distortion: 1, duration: 0.5, ease: "power3.inOut" } );
 
 		}, 1000 );
 		setTimeout( () => {
 
 			// setActiveScene( 2 );
-			gsap.to( paneSettings, { scale: 0, distortion: 0, duration: 1, ease: "power3.inOut" } );
+			gsap.to( paneSettings, { scale: 0, distortion: 0, duration: 0.25, ease: "power3.inOut" } );
 			const { position: p2, quaternion: q2 } = present.rig.getWorldCoordinates();
-			present.rig.flyTo( new THREE.Vector3( p2.x, p2.y, p2.z + 5 ), q2, 2 );
+			present.rig.flyTo( new THREE.Vector3( p2.x, p2.y, p2.z + 5 ), q2, 2, "power3.inOut" );
 			setTimeout( () => setActiveScene( 1 ), 1000 );
 
 		}, 3000 );

@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "scripts": {
     "lint": "yarn prettier && yarn eslint",
@@ -24,7 +24,7 @@
     "@react-three/fiber": "^8.9.0",
     "@studio-freight/lenis": "^0.2.21",
     "glsl-random": "^0.0.5",
-    "gsap": "^3.11.3",
+    "gsap": "3.6.1",
     "maath": "^0.4.2",
     "next": "^13.0.1",
     "next-auth": "^4.16.4",
@@ -35,7 +35,6 @@
     "spotify-web-api-node": "^5.0.2",
     "three": "^0.146.0",
     "three-stdlib": "^2.17.3",
-    "three-story-controls": "^1.0.6",
     "tweakpane": "^3.1.0",
     "zustand": "^4.1.4"
   },
@@ -54,6 +53,7 @@
     "file-loader": "^6.2.0",
     "glslify": "^7.1.1",
     "glslify-loader": "^2.0.0",
+    "null-loader": "^4.0.1",
     "postcss": "^8.4.18",
     "prettier": "^2.7.1",
     "raw-loader": "^4.0.2",

@@ -1,10 +1,11 @@
 import { Canvas, extend } from '@react-three/fiber';
 import { Effects, OrbitControls, Preload } from '@react-three/drei';
-import { HalfFloatType, LinearEncoding, Vector2 } from "three";
+import { HalfFloatType, LinearEncoding, Vector2, PerspectiveCamera, Scene } from "three";
 import { AdaptiveToneMappingPass } from "three/examples/jsm/postprocessing/AdaptiveToneMappingPass";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
 import { VignetteShader } from "three/examples/jsm/shaders/VignetteShader";
+import Environment from "./Environment";
 
 extend( { UnrealBloomPass, AdaptiveToneMappingPass, ShaderPass } );
 
@@ -22,6 +23,7 @@ export default function Scene( { children, ...props } ) {
 	return (
 		<Canvas flat {...props}>
 			<RenderPipeline/>
+			<Environment/>
 			{children}
 			<Preload all/>
 			{/*<OrbitControls/>*/}

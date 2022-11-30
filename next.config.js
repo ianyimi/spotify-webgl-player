@@ -7,6 +7,8 @@ const withPWA = require( 'next-pwa' )( {
 	disable: process.env.NODE_ENV === 'development',
 } );
 
+// const nullLoader = require( "null-loader" );
+
 const nextConfig = {
 	// uncomment the following snippet if using styled components
 	// compiler: {
@@ -53,6 +55,13 @@ const nextConfig = {
 			exclude: /node_modules/,
 			use: [ 'raw-loader', 'glslify-loader' ],
 		} );
+
+		// three-story-controls support
+		// config.module.rules.push( {
+		// 	test: /three-story-controls/,
+		// 	include: /node_modules\/three-story-controls/,
+		// 	use: nullLoader
+		// } );
 
 		return config;
 

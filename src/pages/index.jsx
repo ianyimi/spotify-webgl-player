@@ -32,7 +32,7 @@ Page.canvas = ( { playlists, login } ) => {
 
 	return (
 		<group>
-			<Environment/>
+			{/*<Environment/>*/}
 			{( Boolean( playlists ) ) && <Playlists playlists={playlists} rowLength={5} position-y={- 1}/>}
 			<mesh position-z={2.5}>
 				<boxGeometry args={[ 1, 1 ]}/>

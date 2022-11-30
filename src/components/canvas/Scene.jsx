@@ -1,6 +1,6 @@
 import { Canvas, extend } from '@react-three/fiber';
 import { Effects, OrbitControls, Preload } from '@react-three/drei';
-import { HalfFloatType, LinearEncoding, Vector2, PerspectiveCamera, Scene } from "three";
+import { HalfFloatType, LinearEncoding, Vector2 } from "three";
 import { AdaptiveToneMappingPass } from "three/examples/jsm/postprocessing/AdaptiveToneMappingPass";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";

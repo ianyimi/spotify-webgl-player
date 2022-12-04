@@ -1,3 +1,6 @@
 .next
 dist
 node_modules/
+*.jsx
+*.js
+src/middleware.js

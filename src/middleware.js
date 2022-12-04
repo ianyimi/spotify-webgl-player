@@ -5,20 +5,20 @@ const secret = process.env.JWT_SECRET;
 
 export async function middleware( req ) {
 
-	const token = await getToken( { req, secret } );
-	const nextUrl = req.nextUrl;
+  const token = await getToken( { req, secret } );
+  const nextUrl = req.nextUrl;
 
-	if ( ( Boolean( nextUrl.pathname.includes( "/api/auth" ) ) ) || token ) {
+  if (( Boolean( nextUrl.pathname.includes( "/api/auth" ) ) ) || token) {
 
-		return NextResponse.next();
+    return NextResponse.next();
 
-	}
+  }
 
-	// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-	if ( ! token && nextUrl.href.includes( "localhost:3000" ) && ( nextUrl.pathname === "/" || nextUrl.pathname.includes( "/playlist" ) ) ) {
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (! token && nextUrl.href.includes( "localhost:3000" ) && ( nextUrl.pathname === "/" || nextUrl.pathname.includes( "/playlist" ) )) {
 
-		return NextResponse.redirect( "http://localhost:3000/login" );
+    return NextResponse.redirect( "http://localhost:3000/login" );
 
-	}
+  }
 
 }

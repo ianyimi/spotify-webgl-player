@@ -13,7 +13,11 @@ import { useRouter } from "next/router";
 import { useFrame, useThree, createPortal } from "@react-three/fiber";
 import usePostProcess from "@/templates/hooks/usePostprocess";
 import { useClientStore } from "@/hooks/useStore";
-import { CameraRig, CameraAction } from "three-story-controls";
+
+import dynamic from "next/dynamic";
+
+const CameraRig = dynamic( () => import( "three-story-controls" ).then( c => c.CameraRig ), { ssr: false } );
+const CameraAction = dynamic( () => import( "three-story-controls" ).then( c => c.CameraAction ), { ssr: false } );
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -34,7 +38,7 @@ type VintageTelevisionProps = {
   children?: ReactElement[]
 } & JSX.IntrinsicElements['group']
 
-const glassMat = new THREE.MeshPhysicalMaterial( { roughness: 0, transmission: 1, thickness: 0.1 } );
+const glassMat = new THREE.MeshPhysicalMaterial( { roughness: 0, transmission: 1 } );
 const FILE_URL = "https://dqeczc7c9n9n1.cloudfront.net/models/vintageTelevision-1669157713/vintageTelevision.glb.gz";
 const URL_NOT_FOUND = "https://dqeczc7c9n9n1.cloudfront.net/images/404.png";
 
@@ -43,24 +47,30 @@ export default function Model( props: VintageTelevisionProps ) {
 	const router = useRouter();
 	const [ hovered, hover ] = useState( false );
 	const { url = URL_NOT_FOUND, route, index = 0, intensity = 200, children, ...restProps } = props;
-	const group = useRef<THREE.Group>();
+	const group = useRef<THREE.Group>( null );
 	const { nodes, materials } = useGLTF( FILE_URL ) as GLTFResult;
 	const tvMat = useVintageScreenMaterial( { url: url, intensity: intensity } );
 
 
 	useCursor( hovered );
 
-	const ref = useRef();
+	const ref = useRef( null );
 	const fbo = useRef( useFBO() );
 	const dummyFBO = useFBO();
 	const { events, gl, scene: originScene, camera: originCamera } = useThree();
 	const cameraInit = useRef( false );
-	const [ activeScene, present, setFuture, setActiveScene, paneSettings ] = useClientStore( state => [ state.activeScene, state.present, state.setFuture, state.setActiveScene, state.paneSettings ] );
+	const [ activeScene, present, future, setFuture, setActiveScene, paneSettings ] = useClientStore( state => [ state.activeScene, state.present, state.future, state.setFuture, state.setActiveScene, state.paneSettings ] );
 	// The portal will render into this scene
 	const [ scene ] = useState( () => new THREE.Scene() );
 	// We have our own camera in here, separate from the default
 	const [ camera ] = useState( () => new THREE.PerspectiveCamera( 50, 1, 0.1, 1000 ) );
-	const cameraRig = useRef( new CameraRig( camera, scene ) );
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	// const cameraRig = useRef( new CameraRig( camera, scene ) );
+	future.rig.camera = camera;
+	future.rig.scene = scene;
+	future.gl = fbo.current;
+
 	const focus = useRef( false );
 	const tvMat2 = useSceneMaterial( {
 		url: url,
@@ -111,12 +121,12 @@ export default function Model( props: VintageTelevisionProps ) {
 	} );
 
 	// This is a custom raycast-compute function, it controls how the raycaster functions.
-	const compute = useCallback( ( event, state, previous ) => {
+	const compute = useCallback( ( event: Event, state: any, previous: any ) => {
 
 		// First we call the previous state-onion-layers compute, this is what makes it possible to nest portals
 		if ( ! previous.raycaster.camera ) previous.events.compute( event, previous, previous.previousRoot?.getState() );
 		// We run a quick check against the textured plane itself, if it isn't hit there's no need to raycast at all
-		const [ intersection ] = previous.raycaster.intersectObject( ref.current );
+		const [ intersection ] = previous.raycaster.intersectObject( ref.current ?? undefined );
 		if ( ! intersection ) return false;
 		// We take that hits uv coords, set up this layers raycaster, et voilà, we have raycasting with perspective shift
 		const uv = intersection.uv;
@@ -124,12 +134,12 @@ export default function Model( props: VintageTelevisionProps ) {
 
 	}, [] );
 
-	const handleClick = ( e ) => {
+	const handleClick = ( e: Event ) => {
 
 		// e.preventDefault();
 		// ( route != null ) && router.push( route );
 		if ( activeScene === 2 ) return;
-		setFuture( fbo.current, scene, camera, cameraRig.current );
+		// setFuture( fbo.current, scene, camera, cameraRig.current );
 		const { position: p1, quaternion: q1 } = present.rig.getWorldCoordinates();
 		present.rig.flyTo( new THREE.Vector3( p1.x, p1.y, p1.z - 5 ), q1, 2, "power3.inOut" );
 		setTimeout( () => {
@@ -155,7 +165,7 @@ export default function Model( props: VintageTelevisionProps ) {
 		<group ref={group} {...restProps} dispose={null}>
 			<group
 				name="Scene"
-				onClick={( e ) => handleClick( e )}
+				onClick={( e ) => handleClick( e as unknown as Event )}
 				onPointerOver={() => hover( true )}
 				onPointerOut={() => hover( false )}
 			>

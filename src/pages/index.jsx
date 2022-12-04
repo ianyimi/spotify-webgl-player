@@ -13,16 +13,18 @@ const Pane = dynamic( () => import( '@/components/dom/Pane' ), { ssr: false } );
 const Playlists = dynamic( () => import( '@/components/canvas/Playlists' ), { ssr: false } );
 const Points = dynamic( () => import( '@/components/canvas/Points' ), { ssr: false } );
 const Environment = dynamic( () => import( '@/components/canvas/Environment' ), { ssr: false } );
+const CameraRig = dynamic( () => import( "three-story-controls" ).then( c => c.CameraRig ), { ssr: false } );
+const CameraAction = dynamic( () => import( "three-story-controls" ).then( c => c.CameraAction ), { ssr: false } );
 
 // Dom components go here
 export default function Page( { playlists } ) {
 
-	return (
-		<div>
-			<Pane/>
-			{/*<Dashboard playlists={playlists}/>*/}
-		</div>
-	);
+  return (
+    <div>
+      <Pane/>
+      {/*<Dashboard playlists={playlists}/>*/}
+    </div>
+  );
 
 }
 
@@ -30,53 +32,53 @@ export default function Page( { playlists } ) {
 // It will receive same props as the Page component (from getStaticProps, etc.)
 Page.canvas = ( { playlists, login } ) => {
 
-	return (
-		<group>
-			<Environment/>
-			{( Boolean( playlists ) ) && <Playlists playlists={playlists} rowLength={5} position-y={- 1}/>}
-			<mesh position-z={2.5}>
-				<boxGeometry args={[ 1, 1 ]}/>
-				<meshStandardMaterial color="green"/>
-			</mesh>
-		</group>
-	);
+  return (
+    <group>
+      <Environment cameraRig={CameraRig}/>
+      {( Boolean( playlists ) ) && <Playlists playlists={playlists} rowLength={5} position-y={- 1}/>}
+      <mesh position-z={2.5}>
+        <boxGeometry args={[ 1, 1 ]}/>
+        <meshStandardMaterial color="green"/>
+      </mesh>
+    </group>
+  );
 
 };
 
 export async function getServerSideProps( { req, res } ) {
 
-	const session = await unstable_getServerSession( req, res, authOptions );
+  const session = await unstable_getServerSession( req, res, authOptions );
 
-	// console.log( "SESSION IS: ", session );
-	if ( ! session ) return {
-		redirect: {
-			destination: "login",
-			permanent: false
-		},
-	};
+  // console.log( "SESSION IS: ", session );
+  if (! session) return {
+    redirect: {
+      destination: "login",
+      permanent: false
+    },
+  };
 
-	res.setHeader(
-		'Cache-Control',
-		'public, s-maxage=10, stale-while-revalidate=59'
-	);
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=10, stale-while-revalidate=59'
+  );
 
-	spotifyApi.setAccessToken( session.user.accessToken );
-	const { total, playlists, error } = await fetchUserLikedPlaylists( spotifyApi );
+  spotifyApi.setAccessToken( session.user.accessToken );
+  const { total, playlists, error } = await fetchUserLikedPlaylists( spotifyApi );
 
-	if ( error ) return {
-		redirect: {
-			destination: "login",
-			permanent: false
-		}
-	};
+  if (error) return {
+    redirect: {
+      destination: "login",
+      permanent: false
+    }
+  };
 
-	return {
-		props: {
-			title: "Spotify WebGl Player",
-			session: session,
-			total: await total ?? null,
-			playlists: await playlists ?? null
-		}
-	};
+  return {
+    props: {
+      title: "Spotify WebGl Player",
+      session: session,
+      total: await total ?? null,
+      playlists: await playlists ?? null
+    }
+  };
 
 }

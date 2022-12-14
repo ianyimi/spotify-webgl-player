@@ -4312,9 +4312,9 @@ neo-async@^2.6.2:
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
 next-auth@^4.16.4:
-  version "4.18.0"
-  resolved "https://registry.yarnpkg.com/next-auth/-/next-auth-4.18.0.tgz#f6fb4d2a1bfd6e90650755c13324e24d1f44b0d4"
-  integrity sha512-lqJtusYqUwDiwzO4+B+lx/vKCuf/akcdhxT5R47JmS5gvI9O6Y4CZYc8coysY7XaMGHCxfttvTSEw76RA8gNTg==
+  version "4.18.6"
+  resolved "https://registry.yarnpkg.com/next-auth/-/next-auth-4.18.6.tgz#c23d02894a09e12d210cfb7041afa43fb1e897a4"
+  integrity sha512-0TQwbq5X9Jyd1wUVYUoyvHJh4JWXeW9UOcMEl245Er/Y5vsSbyGJHt8M7xjRMzk9mORVMYehoMdERgyiq/jCgA==
   dependencies:
     "@babel/runtime" "^7.16.3"
     "@panva/hkdf" "^1.0.1"
@@ -5688,11 +5688,6 @@ three-stdlib@^2.17.3, three-stdlib@^2.18.1:
     opentype.js "^1.3.3"
     potpack "^1.0.1"
     zstddec "^0.0.2"
-
-three-story-controls@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/three-story-controls/-/three-story-controls-1.0.6.tgz#93759096568bf5c0ad9821884725496ac317d0fe"
-  integrity sha512-weiuPkUCU/llfOTWOhEMXs7sEmYyQES+3+dYQ9Q4dTx6gc2uVVZy4L5bGbRCwlQL1bJaJH4jtJRHwOVQOO/5Ug==
 
 three@^0.146.0:
   version "0.146.0"

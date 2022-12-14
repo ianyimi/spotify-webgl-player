@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 const secret = process.env.JWT_SECRET;
 
-export async function middleware( req ) {
+export async function _middleware( req ) {
 
   const token = await getToken( { req, secret } );
   const nextUrl = req.nextUrl;

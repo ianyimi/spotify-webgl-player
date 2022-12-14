@@ -1,23 +1,23 @@
 import React, { useEffect, useRef } from 'react';
 import { Pane } from "tweakpane";
-import { useClientStore } from "@/hooks/useStore";
+import { useClientStore } from "/src/templates/hooks/useStore";
 
 export default function Page() {
 
-	const parent = useRef();
-	const paneSettings = useClientStore( s => s.paneSettings );
+  const parent = useRef();
+  const paneSettings = useClientStore( s => s.paneSettings );
 
-	useEffect( () => {
+  useEffect( () => {
 
-		if ( ! parent.current ) return;
-		const pane = new Pane( { title: "Transition Shader", container: parent.current } );
+    if (! parent.current) return;
+    const pane = new Pane( { title: "Transition Shader", container: parent.current } );
 
-		pane.addInput( paneSettings, "scale", { min: 0, max: 3, label: "uCircleScale" } );
-		pane.refresh();
+    pane.addInput( paneSettings, "scale", { min: 0, max: 3, label: "uCircleScale" } );
+    pane.refresh();
 
-	}, [] );
+  }, [] );
 
-	return <div ref={parent}/>;
+  return <div ref={parent}/>;
 
 }
 

@@ -3,4 +3,4 @@ dist
 node_modules/
 *.jsx
 *.js
-src/middleware.js
+src/_middleware.js

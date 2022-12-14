@@ -12,12 +12,14 @@ import { useSceneMaterial } from "../shaders/scene";
 import { useRouter } from "next/router";
 import { useFrame, useThree, createPortal } from "@react-three/fiber";
 import usePostProcess from "@/templates/hooks/usePostprocess";
-import { useClientStore } from "@/hooks/useStore";
+import { useClientStore } from "@/templates/hooks/useStore";
+
+import { Index } from "lib/CameraRig";
 
 import dynamic from "next/dynamic";
 
-const CameraRig = dynamic( () => import( "three-story-controls" ).then( c => c.CameraRig ), { ssr: false } );
-const CameraAction = dynamic( () => import( "three-story-controls" ).then( c => c.CameraAction ), { ssr: false } );
+// const CameraRig = dynamic( () => import( "/lib/CameraRig/CameraRig.js" ).then( c => c.CameraRig ), { ssr: false } );
+// const CameraAction = dynamic( () => import( "three-story-controls" ).then( c => c.CameraAction ), { ssr: false } );
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -66,7 +68,7 @@ export default function Model( props: VintageTelevisionProps ) {
 	const [ camera ] = useState( () => new THREE.PerspectiveCamera( 50, 1, 0.1, 1000 ) );
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
-	// const cameraRig = useRef( new CameraRig( camera, scene ) );
+	const cameraRig = useRef( new Index( camera, scene ) );
 	future.rig.camera = camera;
 	future.rig.scene = scene;
 	future.gl = fbo.current;

@@ -2,12 +2,15 @@ import { MeshReflectorMaterial } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { Vector3, Object3D } from "three";
 import { useEffect, useMemo, useRef } from "react";
-import usePostProcess from "@/templates/hooks/usePostprocess";
-import { useClientStore } from "@/hooks/useStore";
+import usePostProcess from "/src/templates/hooks/usePostprocess";
+import { useClientStore } from "/src/templates/hooks/useStore";
+import { CameraRig } from "/lib/CameraRig";
+
 
 export default function Environment( props ) {
 
-  const { CameraRig } = props;
+  // const { CameraRig } = props;
+  console.log( ThreeStoryControls );
   const { scene, camera, gl } = useThree();
   const [ present, setPast, setPresent, setFuture, setActiveScene ] = useClientStore( state => [ state.present, state.setPast, state.setPresent, state.setFuture, state.setActiveScene ] );
   const pastRig = useRef( new CameraRig() );

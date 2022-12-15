@@ -24,13 +24,9 @@ export default function App( {
          * Since the event source is now shared, the canvas would block events, we prevent that with pointerEvents: none. */}
 					{( Boolean( ( Component?.canvas ) ) ) && (
 						<Scene
-							className="pointer-events-none"
+							// className="pointer-events-none"
 							eventSource={ref}
 							eventPrefix="client"
-							camera={{
-								// position: [ 10, 5, 5 ]
-								position: [ 0, 1, 5 ]
-							}}
 						>
 							{Component.canvas( pageProps )}
 						</Scene>

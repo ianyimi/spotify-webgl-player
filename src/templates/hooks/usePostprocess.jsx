@@ -1,10 +1,11 @@
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import vert from "./glsl/shader.vert";
 import frag from "./glsl/shader.frag";
 import { Uniform } from "three";
-import { useSceneStore } from "@/hooks/useStore";
+import { useClientStore } from "@/templates/hooks/useStore";
+import { Pane } from "tweakpane";
 
 function getFullscreenTriangle() {
 
@@ -25,7 +26,7 @@ const DELTA = 0.003;
 // USAGE: Simply call usePostprocess hook in your r3f component to apply the shader to the canvas as a postprocess effect
 const usePostProcess = () => {
 
-	const [ past, present, future, setPast, activeScene ] = useSceneStore( state => [ state.past, state.present, state.future, state.setPast, state.activeScene ] );
+	const [ past, present, future, paneSettings, setPast, activeScene ] = useClientStore( state => [ state.past, state.present, state.future, state.paneSettings, state.setPast, state.activeScene ] );
 	const [ { dpr }, size, gl ] = useThree( ( s ) => [ s.viewport, s.size, s.gl ] );
 
 	// console.log( present );
@@ -45,11 +46,14 @@ const usePostProcess = () => {
 			uniforms: {
 				// 0 - past; 1 - present; 2 - future
 				active_scene: new Uniform( activeScene ),
+				uCircleScale: new Uniform( 0.5 ),
+				screenAspect: new Uniform( window.innerWidth / window.innerHeight ),
 				diffuse: new Uniform( null ),
 				past: new Uniform( null ),
 				present: new Uniform( null ),
 				future: new Uniform( null ),
 				time: new Uniform( 0 ),
+				distortion: new Uniform( 1 )
 			},
 			vertexShader: vert,
 			fragmentShader: frag,
@@ -74,10 +78,13 @@ const usePostProcess = () => {
 	useFrame( ( { scene, camera, gl } ) => {
 
 		screen.material.uniforms.active_scene.value = activeScene;
+		screen.material.uniforms.uCircleScale.value = paneSettings.scale;
+		screen.material.uniforms.uCircleScale.distortion = paneSettings.distortion;
+		if ( Boolean( screen ) ) screen.material.uniforms.time.value += DELTA;
+
 		gl.setRenderTarget( renderTarget );
 		gl.render( scene, camera );
 		gl.setRenderTarget( null );
-		if ( Boolean( screen ) ) screen.material.uniforms.time.value += DELTA;
 		gl.render( screenScene, screenCamera );
 
 		if ( past && past.gl && past.scene && past.camera ) {

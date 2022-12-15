@@ -1,24 +1,32 @@
 import dynamic from 'next/dynamic';
-import Dashboard from '@/components/dom/Dashboard';
+import Dashboard from '/src/components/dom/Dashboard';
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
-import { spotifyApi } from "@/hooks/useSpotify";
+import { spotifyApi } from "/src/templates/hooks/useSpotify";
 import { fetchUserLikedPlaylists } from "../../lib/api";
 
 // Dynamic import is used to prevent a payload when the website starts, that includes threejs, r3f etc..
 // WARNING ! errors might get obfuscated by using dynamic import.
 // If something goes wrong go back to a static import to show the error.
 // https://github.com/pmndrs/react-three-next/issues/49
+const Pane = dynamic( () => import( '@/components/dom/Pane' ), { ssr: false } );
 const Playlists = dynamic( () => import( '@/components/canvas/Playlists' ), { ssr: false } );
-const Blob = dynamic( () => import( '@/components/canvas/Blob' ), { ssr: false } );
 const Points = dynamic( () => import( '@/components/canvas/Points' ), { ssr: false } );
 const Environment = dynamic( () => import( '@/components/canvas/Environment' ), { ssr: false } );
+// const { CameraRig, CameraAction } = dynamic( () => import( "three-story-controls" ), { ssr: false } );
+// const CameraRig = dynamic( () => import( "lib/CameraRig" ).then( c => c.CameraRig ), { ssr: false } );
+import { CameraRig } from "lib/CameraRig";
+
+// if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
+//   import("https://unpkg.com/three-story-controls@1.0.6/dist/three-story-controls.min.js");
+// }
 
 // Dom components go here
 export default function Page( { playlists } ) {
 
 	return (
 		<div>
+			<Pane/>
 			{/*<Dashboard playlists={playlists}/>*/}
 		</div>
 	);
@@ -27,11 +35,11 @@ export default function Page( { playlists } ) {
 
 // Canvas components go here
 // It will receive same props as the Page component (from getStaticProps, etc.)
-Page.canvas = ( { playlists } ) => {
+Page.canvas = ( { playlists, login } ) => {
 
 	return (
 		<group>
-			<Environment/>
+			<Environment cameraRig={CameraRig}/>
 			{( Boolean( playlists ) ) && <Playlists playlists={playlists} rowLength={5} position-y={- 1}/>}
 			<mesh position-z={2.5}>
 				<boxGeometry args={[ 1, 1 ]}/>

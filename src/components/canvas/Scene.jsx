@@ -24,7 +24,7 @@ export default function Scene( { children, ...props } ) {
 			<RenderPipeline/>
 			{children}
 			<Preload all/>
-			<OrbitControls/>
+			{/*<OrbitControls/>*/}
 		</Canvas>
 	);
 

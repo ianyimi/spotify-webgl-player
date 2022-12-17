@@ -5348,6 +5348,11 @@ three-stdlib@^2.17.3:
     potpack "^1.0.1"
     zstddec "^0.0.2"
 
+three-story-controls@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/three-story-controls/-/three-story-controls-1.0.6.tgz#93759096568bf5c0ad9821884725496ac317d0fe"
+  integrity sha512-weiuPkUCU/llfOTWOhEMXs7sEmYyQES+3+dYQ9Q4dTx6gc2uVVZy4L5bGbRCwlQL1bJaJH4jtJRHwOVQOO/5Ug==
+
 three@^0.146.0:
   version "0.146.0"
   resolved "https://registry.npmjs.org/three/-/three-0.146.0.tgz#fd80f0d128ab4bb821a02191ae241e4e6326f17a"

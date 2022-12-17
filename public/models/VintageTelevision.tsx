@@ -13,8 +13,8 @@ import { useRouter } from "next/router";
 import { useFrame, useThree, createPortal } from "@react-three/fiber";
 import usePostProcess from "@/templates/hooks/usePostprocess";
 import { useClientStore } from "@/hooks/useStore";
-import { CameraRig } from "../../lib/CameraRig";
-import dynamic from "next/dynamic";
+// import { CameraRig } from "../../lib/CameraRig";
+import { CameraRig } from "three-story-controls";
 
 type GLTFResult = GLTF & {
   nodes: {

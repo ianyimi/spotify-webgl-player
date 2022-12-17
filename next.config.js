@@ -26,7 +26,13 @@ const nextConfig = {
 		],
 	},
 	reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.
-	webpack( config, { isServer } ) {
+	webpack( config, { isServer, webpack } ) {
+
+		if ( isServer ) {
+
+			config.plugins.push( new webpack.IgnorePlugin( { resourceRegExp: /three-story-controls/ } ) );
+
+		}
 
 		// audio support
 		config.module.rules.push( {

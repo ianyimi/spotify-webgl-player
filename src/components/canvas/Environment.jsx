@@ -4,7 +4,8 @@ import { Vector3, Object3D } from "three";
 import { useEffect, useMemo, useRef } from "react";
 import usePostProcess from "@/templates/hooks/usePostprocess";
 import { useClientStore } from "@/hooks/useStore";
-import { CameraRig } from "../../../lib/CameraRig";
+// import { CameraRig } from "../../../lib/CameraRig";
+import { CameraRig } from "three-story-controls";
 
 export default function Environment( props ) {
 

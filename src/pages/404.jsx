@@ -6,10 +6,10 @@ export default function Error() {
 
 }
 
-Error.canvas = ( props ) => {
+// Error.canvas = ( props ) => {
 
-	const hostUrl = "https://dqeczc7c9n9n1.cloudfront.net/images";
+// 	const hostUrl = "https://dqeczc7c9n9n1.cloudfront.net/images";
 
-	return <VintageTelevision url={`${hostUrl}/404.png`}/>;
+// 	return <VintageTelevision url={`${hostUrl}/404.png`}/>;
 
-};
+// };

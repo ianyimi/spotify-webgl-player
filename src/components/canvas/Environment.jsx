@@ -4,10 +4,13 @@ import { Vector3, Object3D } from "three";
 import { useEffect, useMemo, useRef } from "react";
 import usePostProcess from "@/templates/hooks/usePostprocess";
 import { useClientStore } from "@/hooks/useStore";
+import inclusion from "inclusion";
 // import { CameraRig } from "../../../lib/CameraRig";
-import { CameraRig } from "three-story-controls";
+// import { CameraRig } from "three-story-controls";
 
-export default function Environment( props ) {
+export default async function Environment( props ) {
+
+	const { CameraRig } = await inclusion( "three-story-controls" );
 
 	const { scene, camera, gl } = useThree();
 	const [ present, setPresent, setActiveScene ] = useClientStore( state => [ state.present, state.setPresent, state.setActiveScene ] );

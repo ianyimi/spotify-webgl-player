@@ -23,13 +23,13 @@ export default function Playlist( { items } ) {
 
 }
 
-Playlist.canvas = ( { url } ) => {
+// Playlist.canvas = ( { url } ) => {
 
-	return <group>
-		<VintageTelevision url={url} route={"/"}/>
-	</group>;
+// 	return <group>
+// 		<VintageTelevision url={url} route={"/"}/>
+// 	</group>;
 
-};
+// };
 
 export async function getServerSideProps( { req, res, query } ) {
 

@@ -47,7 +47,6 @@ export async function getServerSideProps( { req, res } ) {
 
 	const session = await unstable_getServerSession( req, res, authOptions );
 
-	// console.log( "SESSION IS: ", session );
 	if ( ! session ) return {
 		redirect: {
 			destination: "login",

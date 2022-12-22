@@ -13,8 +13,9 @@ import { useRouter } from "next/router";
 import { useFrame, useThree, createPortal } from "@react-three/fiber";
 import usePostProcess from "@/templates/hooks/usePostprocess";
 import { useClientStore } from "@/hooks/useStore";
+import inclusion from "inclusion";
 // import { CameraRig } from "../../lib/CameraRig";
-import { CameraRig } from "three-story-controls";
+// import { CameraRig } from "three-story-controls";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -39,7 +40,9 @@ const glassMat = new THREE.MeshPhysicalMaterial( { roughness: 0, transmission: 1
 const FILE_URL = "https://dqeczc7c9n9n1.cloudfront.net/models/vintageTelevision-1669157713/vintageTelevision.glb.gz";
 const URL_NOT_FOUND = "https://dqeczc7c9n9n1.cloudfront.net/images/404.png";
 
-export default function Model( props: VintageTelevisionProps ) {
+export default async function Model( props: VintageTelevisionProps ) {
+
+	const { CameraRig } = await inclusion( "three-story-controls" );
 
 	const router = useRouter();
 	const [ hovered, hover ] = useState( false );

@@ -54,7 +54,7 @@ echo -e "👉 Found\t\t${STAGED_FILE}"
 #echo -e "👉 Draco\t\tComplete"
 
 # gltfjsx
-npx @react-three/gltfjsx "${STAGED_FILE}" "${JSX_FILE}" -d -t -v -p 4 || handle_error
+npx gltfjsx "${STAGED_FILE}" "${JSX_FILE}" -d -t -v -p 4 || handle_error
 echo -e "👉 Gltfjsx\t\tComplete"
 
 #gzip

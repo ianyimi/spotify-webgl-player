@@ -57,6 +57,7 @@ export default function Header( { title = titleDefault } ) {
         Be sure validate your Twitter card markup on the documentation site. */}
 			<meta name="twitter:card" content="summary"/>
 			<meta name="twitter:site" content="@yonkozay_"/>
+			<script async src="https://unpkg.com/three-story-controls@1.0.6/dist/three-story-controls.esm.min.js" />
 		</Head>
 	);
 

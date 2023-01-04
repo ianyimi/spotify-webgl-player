@@ -4,21 +4,21 @@ import { Vector3, Object3D } from "three";
 import { useEffect, useMemo, useRef } from "react";
 import usePostProcess from "@/templates/hooks/usePostprocess";
 import { useClientStore } from "@/hooks/useStore";
-import inclusion from "inclusion";
-// import { CameraRig } from "../../../lib/CameraRig";
-// import { CameraRig } from "three-story-controls";
+import { CameraRig } from "three-story-controls";
 
-export default async function Environment( props ) {
+export default function Environment( props ) {
 
-	const { CameraRig } = await inclusion( "three-story-controls" );
+	// const CameraRig = inclusion( "three-story-controls" ).then( c => c.CameraRig );
+	// console.log( "🚀 ~ file: Environment.jsx:14 ~ Environment ~ CameraRig", CameraRig );
 
 	const { scene, camera, gl } = useThree();
 	const [ present, setPresent, setActiveScene ] = useClientStore( state => [ state.present, state.setPresent, state.setActiveScene ] );
 	const rig = useMemo( () => {
 
+		console.log( CameraRig );
 		return new CameraRig( camera, scene );
 
-	}, [ scene, camera, gl ] );
+	}, [ scene, camera, CameraRig ] );
 
 	usePostProcess();
 	useEffect( () => {

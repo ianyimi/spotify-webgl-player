@@ -1,4 +1,4 @@
-import VintageTelevision from "public/models/VintageTelevision";
+import VintageTelevision from "@/models/VintageTelevision";
 import { ScrollState } from "@/templates/Scroll";
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";

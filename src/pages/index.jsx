@@ -4,6 +4,7 @@ import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { spotifyApi } from "@/hooks/useSpotify";
 import { fetchUserLikedPlaylists } from "../../lib/api";
+import { useClientStore } from '@/hooks/useStore';
 
 // Dynamic import is used to prevent a payload when the website starts, that includes threejs, r3f etc..
 // WARNING ! errors might get obfuscated by using dynamic import.
@@ -13,9 +14,14 @@ const Pane = dynamic( () => import( '@/components/dom/Pane' ), { ssr: false } );
 const Playlists = dynamic( () => import( '@/components/canvas/Playlists' ), { ssr: false } );
 const Points = dynamic( () => import( '@/components/canvas/Points' ), { ssr: false } );
 const Environment = dynamic( () => import( '@/components/canvas/Environment' ), { ssr: false } );
+// const CameraRig = dynamic( () => import( "three-story-controls" ).then( c => c.CameraRig ), { ssr: false } );
 
 // Dom components go here
-export default function Page( { playlists } ) {
+export default async function Page( { playlists } ) {
+
+	// const setCameraRig = useClientStore( s => s.setCameraRig );
+	// console.log( CameraRig );
+	// CameraRig && setCameraRig( CameraRig );
 
 	return (
 		<div>
@@ -46,6 +52,7 @@ Page.canvas = ( { playlists, login } ) => {
 export async function getServerSideProps( { req, res } ) {
 
 	const session = await unstable_getServerSession( req, res, authOptions );
+	// const { CameraRig } = await inclusion( "three-story-controls" );
 
 	if ( ! session ) return {
 		redirect: {
@@ -74,7 +81,7 @@ export async function getServerSideProps( { req, res } ) {
 			title: "Spotify WebGl Player",
 			session: session,
 			total: await total ?? null,
-			playlists: await playlists ?? null
+			playlists: await playlists ?? null,
 		}
 	};
 

@@ -7,15 +7,25 @@ import { gsap } from "gsap";
 import React, { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { useCursor, useFBO, useGLTF } from '@react-three/drei';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
-import { useVintageScreenMaterial } from "../shaders/vintageScreen";
-import { useSceneMaterial } from "../shaders/scene";
+import { useVintageScreenMaterial } from "../../public/shaders/vintageScreen/index";
+import { useSceneMaterial } from "../../public/shaders/scene/index";
 import { useRouter } from "next/router";
 import { useFrame, useThree, createPortal } from "@react-three/fiber";
 import usePostProcess from "@/templates/hooks/usePostprocess";
 import { useClientStore } from "@/hooks/useStore";
-import inclusion from "inclusion";
+// import dynamic from "next/dynamic";
+// import inclusion from "inclusion";
 // import { CameraRig } from "../../lib/CameraRig";
-// import { CameraRig } from "three-story-controls";
+import { CameraRig } from "three-story-controls";
+// import type { CameraRig as CameraRigType } from "../../lib/CameraRig";
+
+// type CameraRigProps = JSX.LibraryManagedAttributes<
+//   typeof CameraRigType,
+//   React.ComponentProps<typeof CameraRigType>
+// >
+
+// const CameraRig = dynamic<CameraRigProps>( () => import( "../../lib/CameraRig" ).then( m => m.CameraRig ), { ssr: false } );
+// const CameraRig = dynamic( () => import( "three-story-controls" ), { ssr: false } );
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -40,9 +50,9 @@ const glassMat = new THREE.MeshPhysicalMaterial( { roughness: 0, transmission: 1
 const FILE_URL = "https://dqeczc7c9n9n1.cloudfront.net/models/vintageTelevision-1669157713/vintageTelevision.glb.gz";
 const URL_NOT_FOUND = "https://dqeczc7c9n9n1.cloudfront.net/images/404.png";
 
-export default async function Model( props: VintageTelevisionProps ) {
+export default function Model( props: VintageTelevisionProps ) {
 
-	const { CameraRig } = await inclusion( "three-story-controls" );
+	// const { CameraRig } = inclusion( "three-story-controls" );
 
 	const router = useRouter();
 	const [ hovered, hover ] = useState( false );

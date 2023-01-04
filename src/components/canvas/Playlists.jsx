@@ -1,6 +1,6 @@
 import VintageTelevision from "@/models/VintageTelevision";
 import { ScrollState } from "@/templates/Scroll";
-import { useRef } from "react";
+import { useRef, Suspense } from "react";
 import { useFrame } from "@react-three/fiber";
 import PortalScene from "./PortalScene";
 
@@ -65,9 +65,10 @@ export default function Playlists( props ) {
 
 	} );
 
-
 	return <group ref={group}>
-		{screens}
+		<Suspense fallback={null}>
+			{screens}
+		</Suspense>
 	</group>;
 
 }

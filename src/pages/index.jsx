@@ -17,7 +17,7 @@ const Environment = dynamic( () => import( '@/components/canvas/Environment' ), 
 // const CameraRig = dynamic( () => import( "three-story-controls" ).then( c => c.CameraRig ), { ssr: false } );
 
 // Dom components go here
-export default async function Page( { playlists } ) {
+export default function Page( { playlists } ) {
 
 	// const setCameraRig = useClientStore( s => s.setCameraRig );
 	// console.log( CameraRig );

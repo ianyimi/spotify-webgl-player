@@ -9,7 +9,6 @@ import { useCursor, useFBO, useGLTF } from '@react-three/drei';
 import { GLTF } from 'three-stdlib';
 
 import { gsap } from "gsap";
-import { useVintageScreenMaterial } from "../../public/shaders/vintageScreen/index";
 import { useSceneMaterial } from "../../public/shaders/scene/index";
 import { useRouter } from "next/router";
 import { useFrame, useThree, createPortal } from "@react-three/fiber";
@@ -47,13 +46,10 @@ export default function Model( props: VintageTelevisionProps ) {
 	const { url = URL_NOT_FOUND, route, index = 0, intensity = 200, children, ...restProps } = props;
 	const { nodes, materials } = useGLTF( FILE_URL ) as GLTFResult;
 
-	const tvMat = useVintageScreenMaterial( { url: url, intensity: intensity } );
-
 	useCursor( hovered );
 
 	const screen = useRef();
 	const fbo = useRef( useFBO() );
-	const dummyFBO = useFBO();
 	const { events, gl, scene: originScene, camera: originCamera } = useThree();
 	const cameraInit = useRef( false );
 	const [ activeScene, present, setFuture, setActiveScene, paneSettings ] = useClientStore( state => [ state.activeScene, state.present, state.setFuture, state.setActiveScene, state.paneSettings ] );
@@ -62,8 +58,7 @@ export default function Model( props: VintageTelevisionProps ) {
 	// We have our own camera in here, separate from the default
 	const [ camera ] = useState( () => new PerspectiveCamera( 50, 1, 0.1, 1000 ) );
 	const cameraRig = useRef( new CameraRig( camera, scene ) );
-	const focus = useRef( false );
-	const tvMat2 = useSceneMaterial( {
+	const tvMat = useSceneMaterial( {
 		url: url,
 		intensity: intensity,
 		renderedScene: children ? fbo.current.texture : undefined
@@ -73,11 +68,8 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		camera.aspect = 0.5 / 0.42;
 		camera.updateProjectionMatrix();
-		// addContext( fbo, scene, camera );
 
 	}, [] );
-
-	// usePostProcess();
 
 	useFrame( ( state ) => {
 
@@ -93,11 +85,11 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		if ( hovered ) {
 
-			tvMat2.uniforms.altScene.value = 1;
+			tvMat.uniforms.altScene.value = 1;
 
 		} else {
 
-			tvMat2.uniforms.altScene.value = 0;
+			tvMat.uniforms.altScene.value = 0;
 
 		}
 
@@ -106,8 +98,8 @@ export default function Model( props: VintageTelevisionProps ) {
 		state.gl.render( scene, camera );
 		state.gl.setRenderTarget( null );
 
-		tvMat2.uniforms.time.value = state.clock.getElapsedTime() / 2;
-		tvMat2.uniforms.intensity.value = intensity + ( intensity / 4 * Math.sin( state.clock.getElapsedTime() ) );
+		tvMat.uniforms.time.value = state.clock.getElapsedTime() / 2;
+		tvMat.uniforms.intensity.value = intensity + ( intensity / 4 * Math.sin( state.clock.getElapsedTime() ) );
 
 	} );
 
@@ -128,7 +120,6 @@ export default function Model( props: VintageTelevisionProps ) {
 	const handleClick = ( e ) => {
 
 		// e.preventDefault();
-		// ( route != null ) && router.push( route );
 		if ( activeScene === 2 ) return;
 		setFuture( fbo.current, scene, camera, cameraRig.current );
 		const { position: p1, quaternion: q1 } = present.rig.getWorldCoordinates();
@@ -141,14 +132,12 @@ export default function Model( props: VintageTelevisionProps ) {
 		}, 1000 );
 		setTimeout( () => {
 
-			// setActiveScene( 2 );
 			gsap.to( paneSettings, { scale: 0, distortion: 0, duration: 0.25, ease: "power3.inOut" } );
 			const { position: p2, quaternion: q2 } = present.rig.getWorldCoordinates();
 			present.rig.flyTo( new Vector3( p2.x, p2.y, p2.z + 5 ), q2, 2, "power3.inOut" );
 			setTimeout( () => setActiveScene( 1 ), 1000 );
 
 		}, 3000 );
-		// forward();
 
 	};
 
@@ -172,7 +161,7 @@ export default function Model( props: VintageTelevisionProps ) {
 					position={[ - 0.0011, 0.0054, - 0.0071 ]}
 					scale={5.0809}
 				>
-					<mesh ref={screen} material={tvMat2} position={[ - 0.085, 0.2525, 0.15 ]}>
+					<mesh ref={screen} material={tvMat} position={[ - 0.085, 0.2525, 0.15 ]}>
 						<planeGeometry args={[ 0.5, 0.42 ]}/>
 					</mesh>
 					{children && createPortal( children, scene, {

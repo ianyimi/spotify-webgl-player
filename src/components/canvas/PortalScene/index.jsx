@@ -1,14 +1,14 @@
-import { useThree } from "@react-three/fiber";
 import Points from "../Points";
-import { useState } from "react";
-import { useClientStore } from "@/hooks/useStore";
-import { OrbitControls } from "@react-three/drei";
 
 export default function PortalScene( props ) {
 
 	return (
 		<group {...props}>
-			<Points/>
+			{/* <Points/> */}
+			<mesh position-z={- 2.5}>
+				<boxGeometry args={[ 1, 1 ]}/>
+				<meshBasicMaterial color="green"/>
+			</mesh>
 		</group>
 	);
 

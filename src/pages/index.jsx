@@ -9,9 +9,9 @@ import { fetchUserLikedPlaylists } from "../../lib/api";
 // WARNING ! errors might get obfuscated by using dynamic import.
 // If something goes wrong go back to a static import to show the error.
 // https://github.com/pmndrs/react-three-next/issues/49
-const Pane = dynamic( () => import( '@/components/dom/Pane' ), { ssr: false } );
 const Playlists = dynamic( () => import( '@/components/canvas/Playlists' ), { ssr: false } );
 const Environment = dynamic( () => import( '@/components/canvas/Environment' ), { ssr: false } );
+// const Pane = dynamic( () => import( '@/components/dom/Pane' ), { ssr: false } );
 // const CameraRig = dynamic( () => import( "three-story-controls" ).then( c => c.CameraRig ), { ssr: false } );
 
 // Dom components go here
@@ -19,7 +19,7 @@ export default function Page( { playlists } ) {
 
 	return (
 		<div>
-			<Pane/>
+			{/* <Pane/> */}
 			{/*<Dashboard playlists={playlists}/>*/}
 		</div>
 	);

@@ -66,7 +66,7 @@ export default function Model( props: VintageTelevisionProps ) {
 
 	useEffect( () => {
 
-		camera.aspect = 0.5 / 0.42;
+		camera.aspect = originCamera.aspect;
 		camera.updateProjectionMatrix();
 
 	}, [] );

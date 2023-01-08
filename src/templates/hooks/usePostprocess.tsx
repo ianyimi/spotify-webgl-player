@@ -30,7 +30,7 @@ const usePostProcess = () => {
 
 	const [ screenCamera, screenScene, screen, renderTarget ] = useMemo( () => {
 
-		let screenScene = new THREE.Scene();
+		const screenScene = new THREE.Scene();
 		const screenCamera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
 		const screen = new THREE.Mesh( getFullscreenTriangle() );
 		screen.frustumCulled = false;

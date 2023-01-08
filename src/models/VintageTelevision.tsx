@@ -120,7 +120,7 @@ export default function Model( props: VintageTelevisionProps ) {
 	const handleClick = ( e ) => {
 
 		// e.preventDefault();
-		if ( activeScene === 2 ) return;
+		if ( ! present || activeScene === 2 ) return;
 		setFuture( fbo.current, scene, camera, cameraRig.current );
 		const { position: p1, quaternion: q1 } = present.rig.getWorldCoordinates();
 		present.rig.flyTo( new Vector3( p1.x, p1.y, p1.z - 5 ), q1, 2, "power3.inOut" );

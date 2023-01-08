@@ -1,5 +1,5 @@
 import VintageTelevision from "@/models/VintageTelevision";
-import { ScrollState } from "@/templates/Scroll";
+// import { ScrollState } from "@/templates/Scroll";
 import { useRef, Suspense } from "react";
 import { useFrame } from "@react-three/fiber";
 import PortalScene from "./PortalScene";

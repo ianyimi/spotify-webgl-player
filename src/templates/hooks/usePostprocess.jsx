@@ -1,11 +1,10 @@
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import vert from "./glsl/shader.vert";
 import frag from "./glsl/shader.frag";
 import { Uniform } from "three";
 import { useClientStore } from "@/hooks/useStore";
-import { Pane } from "tweakpane";
 
 function getFullscreenTriangle() {
 

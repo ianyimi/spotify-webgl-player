@@ -26,7 +26,6 @@ const nextConfig = {
 		],
 	},
 	reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.
-	future: { webpack5: true },
 	webpack( config, { isServer } ) {
 
 		// audio support

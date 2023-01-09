@@ -52,7 +52,7 @@ export default function Model( props: VintageTelevisionProps ) {
 	const fbo = useRef( useFBO() );
 	const { events, gl, scene: originScene, camera: originCamera } = useThree();
 	const cameraInit = useRef( false );
-	const [ activeScene, present, setFuture, setActiveScene, paneSettings ] = useClientStore( state => [ state.activeScene, state.present, state.setFuture, state.setActiveScene, state.paneSettings ] );
+	const [ activeScene, present, setFuture, setActiveScene, paneSettings, incept, regress ] = useClientStore( state => [ state.activeScene, state.present, state.setFuture, state.setActiveScene, state.paneSettings, state.incept, state.regress ] );
 	// The portal will render into this scene
 	const [ scene ] = useState( () => new Scene() );
 	// We have our own camera in here, separate from the default
@@ -93,7 +93,6 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		}
 
-
 		state.gl.setRenderTarget( fbo.current );
 		state.gl.render( scene, camera );
 		state.gl.setRenderTarget( null );
@@ -122,20 +121,10 @@ export default function Model( props: VintageTelevisionProps ) {
 		// e.preventDefault();
 		if ( ! present || activeScene === 2 ) return;
 		setFuture( fbo.current, scene, camera, cameraRig.current );
-		const { position: p1, quaternion: q1 } = present.rig.getWorldCoordinates();
-		present.rig.flyTo( new Vector3( p1.x, p1.y, p1.z - 5 ), q1, 2, "power3.inOut" );
+		incept();
 		setTimeout( () => {
 
-			setActiveScene( 2 );
-			gsap.to( paneSettings, { scale: 3, distortion: 1, duration: 0.5, ease: "power3.inOut" } );
-
-		}, 1000 );
-		setTimeout( () => {
-
-			gsap.to( paneSettings, { scale: 0, distortion: 0, duration: 0.25, ease: "power3.inOut" } );
-			const { position: p2, quaternion: q2 } = present.rig.getWorldCoordinates();
-			present.rig.flyTo( new Vector3( p2.x, p2.y, p2.z + 5 ), q2, 2, "power3.inOut" );
-			setTimeout( () => setActiveScene( 1 ), 1000 );
+			regress();
 
 		}, 3000 );
 

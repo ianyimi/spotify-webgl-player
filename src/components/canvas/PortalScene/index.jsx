@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { OrbitControls } from "@react-three/drei";
 
 export default function PortalScene( props ) {
 
@@ -14,6 +15,7 @@ export default function PortalScene( props ) {
 				<boxGeometry args={[ 1, 1 ]}/>
 				<meshBasicMaterial color={hover ? "pink" : "green"}/>
 			</mesh>
+			<OrbitControls />
 		</group>
 	);
 

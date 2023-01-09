@@ -10,10 +10,8 @@ import {
 	RawShaderMaterial,
 	GLSL3
 } from 'three';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import vert from "./glsl/shader.vert";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import frag from "./glsl/shader.frag";
 import { Uniform } from "three";

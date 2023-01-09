@@ -9,10 +9,10 @@ export type CustomScene = {
 	gl: WebGLRenderer,
 	scene: Scene,
 	camera: PerspectiveCamera,
-	rig: CameraRig
+	rig: typeof CameraRig
 }
 
-type SetCustomScene = ( gl: WebGLRenderer, scene: Scene, camera: PerspectiveCamera, rig: CameraRig ) => void;
+type SetCustomScene = ( gl: WebGLRenderer, scene: Scene, camera: PerspectiveCamera, rig: typeof CameraRig ) => void;
 
 type ClientStore = {
 	activeScene: number,

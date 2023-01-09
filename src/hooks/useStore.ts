@@ -13,6 +13,7 @@ type SetCustomScene = ( gl: WebGLRenderer, scene: Scene, camera: PerspectiveCame
 
 type ClientStore = {
 	activeScene: number,
+	setActiveScene: ( scene: number ) => void,
 	past?: CustomScene,
 	present?: CustomScene,
 	future?: CustomScene,
@@ -30,6 +31,7 @@ export const useClientStore = create<ClientStore>()( ( set, get ) => {
 	// renderTarget.depthTexture = new THREE.DepthTexture();
 
 	return {
+		// This value gets animated in Postprocessing shader
 		activeScene: 1,
 		past: undefined,
 		present: undefined,

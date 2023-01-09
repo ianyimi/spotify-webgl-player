@@ -1,19 +1,32 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useMemo } from 'react';
-import * as THREE from 'three';
+import {
+	BufferGeometry,
+	BufferAttribute,
+	Scene, OrthographicCamera,
+	Mesh,
+	WebGLRenderTarget,
+	DepthTexture,
+	RawShaderMaterial,
+	GLSL3
+} from 'three';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import vert from "./glsl/shader.vert";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import frag from "./glsl/shader.frag";
 import { Uniform } from "three";
 import { useClientStore } from "@/hooks/useStore";
 
 function getFullscreenTriangle() {
 
-	const geometry = new THREE.BufferGeometry();
+	const geometry = new BufferGeometry();
 	const vertices = new Float32Array( [ - 1, - 1, 3, - 1, - 1, 3 ] );
 	const uvs = new Float32Array( [ 0, 0, 2, 0, 0, 2 ] );
 
-	geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 2 ) );
-	geometry.setAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
+	geometry.setAttribute( 'position', new BufferAttribute( vertices, 2 ) );
+	geometry.setAttribute( 'uv', new BufferAttribute( uvs, 2 ) );
 
 	return geometry;
 
@@ -30,17 +43,17 @@ const usePostProcess = () => {
 
 	const [ screenCamera, screenScene, screen, renderTarget ] = useMemo( () => {
 
-		const screenScene = new THREE.Scene();
-		const screenCamera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
-		const screen = new THREE.Mesh( getFullscreenTriangle() );
+		const screenScene = new Scene();
+		const screenCamera = new OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
+		const screen = new Mesh( getFullscreenTriangle() );
 		screen.frustumCulled = false;
 		screenScene.add( screen );
 
-		const renderTarget = new THREE.WebGLRenderTarget( 512, 512, { samples: 4, encoding: gl.encoding } );
-		renderTarget.depthTexture = new THREE.DepthTexture(); // fix depth issues
+		const renderTarget = new WebGLRenderTarget( 512, 512, { samples: 4, encoding: gl.encoding } );
+		renderTarget.depthTexture = new DepthTexture(); // fix depth issues
 
 		// use ShaderMaterial for linearToOutputTexel
-		screen.material = new THREE.RawShaderMaterial( {
+		screen.material = new RawShaderMaterial( {
 			uniforms: {
 				// 0 - past; 1 - present; 2 - future
 				active_scene: new Uniform( activeScene ),
@@ -55,7 +68,7 @@ const usePostProcess = () => {
 			},
 			vertexShader: vert,
 			fragmentShader: frag,
-			glslVersion: THREE.GLSL3,
+			glslVersion: GLSL3,
 		} );
 		screen.material.uniforms.diffuse.value = renderTarget.texture;
 

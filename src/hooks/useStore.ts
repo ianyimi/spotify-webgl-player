@@ -1,4 +1,4 @@
-import type { WebGLRenderer, Scene, PerspectiveCamera } from "three";
+import type { WebGLRenderTarget, Scene, PerspectiveCamera } from "three";
 import type { CameraRig } from "three-story-controls";
 
 import { Vector3 } from "three";
@@ -6,13 +6,13 @@ import create from "zustand";
 import { gsap } from "gsap";
 
 export type CustomScene = {
-	gl: WebGLRenderer,
+	gl: WebGLRenderTarget,
 	scene: Scene,
 	camera: PerspectiveCamera,
 	rig: typeof CameraRig
 }
 
-type SetCustomScene = ( gl: WebGLRenderer, scene: Scene, camera: PerspectiveCamera, rig: typeof CameraRig ) => void;
+type SetCustomScene = ( gl: WebGLRenderTarget, scene: Scene, camera: PerspectiveCamera, rig: typeof CameraRig ) => void;
 
 type ClientStore = {
 	activeScene: number,

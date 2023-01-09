@@ -8,7 +8,8 @@ import {
 	WebGLRenderTarget,
 	DepthTexture,
 	RawShaderMaterial,
-	GLSL3
+	GLSL3,
+	WebGLRenderer
 } from 'three';
 // @ts-ignore
 import vert from "./glsl/shader.vert";

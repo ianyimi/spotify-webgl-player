@@ -34,21 +34,21 @@ type VintageTelevisionProps = {
   children?: ReactElement[]
 } & JSX.IntrinsicElements['group']
 
-const glassMat = new MeshPhysicalMaterial( { roughness: 0, transmission: 1, thickness: 0.1 } );
+const glassMat = new MeshPhysicalMaterial( { roughness: 0, transmission: 1 } );
 const FILE_URL = "https://dqeczc7c9n9n1.cloudfront.net/models/vintageTelevision-1672798597/vintageTelevision.glb.gz";
 const URL_NOT_FOUND = "https://dqeczc7c9n9n1.cloudfront.net/images/404.png";
 
 export default function Model( props: VintageTelevisionProps ) {
 
 	const router = useRouter();
-	const group = useRef<Group>();
+	const group = useRef<Group>( null );
 	const [ hovered, hover ] = useState( false );
 	const { url = URL_NOT_FOUND, route, index = 0, intensity = 200, children, ...restProps } = props;
-	const { nodes, materials } = useGLTF( FILE_URL ) as GLTFResult;
+	const { nodes, materials } = useGLTF( FILE_URL ) as unknown as GLTFResult;
 
 	useCursor( hovered );
 
-	const screen = useRef();
+	const screen = useRef( null );
 	const fbo = useRef( useFBO() );
 	const { events, gl, scene: originScene, camera: originCamera } = useThree();
 	const cameraInit = useRef( false );

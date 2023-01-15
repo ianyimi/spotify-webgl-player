@@ -16,7 +16,7 @@ export const config = { limit: 50 };
 
 export function handleError( error ) {
 
-	return { ...error.body };
+	return { ...error };
 
 }
 

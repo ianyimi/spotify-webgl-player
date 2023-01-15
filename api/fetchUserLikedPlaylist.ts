@@ -1,6 +1,11 @@
 import { SpotifyApi, handleError, config } from "./index";
 
-export async function fetchUserLikedPlaylists( api: SpotifyApi ) {
+type UserLikedPlaylistData = {
+	playlists: SpotifyApi.PlaylistObjectSimplified[],
+	total: number
+}
+
+export async function fetchUserLikedPlaylists( api: SpotifyApi ): Promise<UserLikedPlaylistData> {
 
 	try {
 

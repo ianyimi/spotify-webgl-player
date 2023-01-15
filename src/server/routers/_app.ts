@@ -1,8 +1,10 @@
 import { z } from 'zod';
 import { procedure, router } from '../trpc';
-import { SpotifyApi } from '../context';
-import { fetchPlaylistData, fetchUserCreatedPlaylists } from 'api';
+import { SpotifyApi, SessionContext } from '../context';
+import { fetchPlaylistData, fetchUserCreatedPlaylists, fetchUserLikedPlaylists } from 'api';
 import { isAuthorized } from './_middleware';
+
+const authorizedProcedure = procedure.use( isAuthorized );
 
 export const appRouter = router( {
 	hello: procedure
@@ -18,8 +20,17 @@ export const appRouter = router( {
 			};
 
 		} ),
-	fetchUserCreatedPlaylists: procedure
-		.use( isAuthorized )
+	fetchUserLikedPlaylists: authorizedProcedure
+		.query( async () => {
+
+			const data = await fetchUserLikedPlaylists( SpotifyApi );
+			return {
+				playlists: data.playlists,
+				total: data.total
+			};
+
+		} ),
+	fetchUserCreatedPlaylists: authorizedProcedure
 		.query( async () => {
 
 			const data = await fetchUserCreatedPlaylists( SpotifyApi );
@@ -29,8 +40,7 @@ export const appRouter = router( {
 			};
 
 		} ),
-	fetchPlaylistData: procedure
-		.use( isAuthorized )
+	fetchPlaylistData: authorizedProcedure
 		.input(
 			z.object( {
 				id: z.string()

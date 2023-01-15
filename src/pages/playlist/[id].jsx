@@ -41,6 +41,8 @@ Playlist.canvas = () => {
 
 	}
 
+	console.log( data.items );
+
 	return <group>
 		<VintageTelevision url={data.imageUrl} route={"/"}/>
 	</group>;

@@ -1,8 +1,9 @@
 import dynamic from 'next/dynamic';
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
-import { spotifyApi } from "@/hooks/useSpotify";
-import { fetchUserLikedPlaylists } from "../../lib/api";
+import { SpotifyApi } from "../server/context";
+import { fetchUserLikedPlaylists } from "lib/api";
+import { trpc } from "../utils/trpc";
 // import Dashboard from '@/components/dom/Dashboard';
 
 // Dynamic import is used to prevent a payload when the website starts, that includes threejs, r3f etc..
@@ -17,8 +18,18 @@ const Environment = dynamic( () => import( '@/components/canvas/Environment' ), 
 // Dom components go here
 export default function Page( { playlists } ) {
 
+	const hello = trpc.fetchCreatedPlaylists.useQuery();
+	if ( ! hello.data ) {
+
+		return <div>Loading...</div>;
+
+	}
+
+	console.log( hello.data );
+
 	return (
 		<div>
+			<p>Loaded</p>
 			{/* <Pane/> */}
 			{/*<Dashboard playlists={playlists}/>*/}
 		</div>
@@ -59,8 +70,8 @@ export async function getServerSideProps( { req, res } ) {
 		'public, s-maxage=10, stale-while-revalidate=59'
 	);
 
-	spotifyApi.setAccessToken( session.user.accessToken );
-	const { total, playlists, error } = await fetchUserLikedPlaylists( spotifyApi );
+	SpotifyApi.setAccessToken( session.user.accessToken );
+	const { total, playlists, error } = await fetchUserLikedPlaylists( SpotifyApi );
 
 	if ( error ) return {
 		redirect: {

@@ -41,6 +41,7 @@
     "three": "^0.146.0",
     "three-stdlib": "^2.17.3",
     "three-story-controls": "1.0.6",
+    "zod": "^3.20.2",
     "zustand": "^4.1.4"
   },
   "devDependencies": {

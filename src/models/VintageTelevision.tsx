@@ -45,6 +45,7 @@ export default function Model( props: VintageTelevisionProps ) {
 	const router = useRouter();
 	const group = useRef<Group>( null );
 	const [ hovered, hover ] = useState( false );
+	const [ focused, setFocus ] = useState( false );
 	const worldPosition = useRef( new Vector3() );
 	const worldQuaternion = useRef( new Quaternion() );
 	const { url = URL_NOT_FOUND, route, index = 0, intensity = 200, children, ...restProps } = props;
@@ -56,7 +57,7 @@ export default function Model( props: VintageTelevisionProps ) {
 	const fbo = useRef( useFBO() );
 	const { events, gl, scene: originScene, camera: originCamera } = useThree();
 	const cameraInit = useRef( false );
-	const [ activeScene, present, setFuture, setActiveScene, paneSettings, incept, regress ] = useClientStore( state => [ state.activeScene, state.present, state.setFuture, state.setActiveScene, state.paneSettings, state.incept, state.regress ] );
+	const [ activeScene, present, setFuture, setActiveScene, paneSettings, sceneImmersion, sceneReversion ] = useClientStore( state => [ state.activeScene, state.present, state.setFuture, state.setActiveScene, state.paneSettings, state.sceneImmersion, state.sceneReversion ] );
 	// The portal will render into this scene
 	const [ scene ] = useState( () => new Scene() );
 	// We have our own camera in here, separate from the default
@@ -136,14 +137,22 @@ export default function Model( props: VintageTelevisionProps ) {
 		// e.preventDefault();
 		if ( ! present || activeScene === 2 ) return;
 		if ( ! worldPosition.current || ! worldQuaternion.current ) return;
+		if ( focused ) {
+
+			present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
+			sceneImmersion();
+			setTimeout( () => {
+
+				sceneReversion();
+
+			}, 3000 );
+
+		}
+
+		setFocus( true );
 		setFuture( fbo.current, scene, camera, cameraRig.current );
 		present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
-		// incept();
-		// setTimeout( () => {
 
-		// 	regress();
-
-		// }, 3000 );
 
 	};
 

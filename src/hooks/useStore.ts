@@ -25,8 +25,8 @@ type ClientStore = {
 	setPresent: SetCustomScene,
 	setFuture: SetCustomScene,
 	paneSettings: { scale: number, distortion: number },
-	incept: () => void,
-	regress: () => void
+	sceneImmersion: () => void,
+	sceneReversion: () => void
 }
 
 export const useClientStore = create<ClientStore>()( ( set, get ) => {
@@ -49,7 +49,7 @@ export const useClientStore = create<ClientStore>()( ( set, get ) => {
 
 		},
 		setActiveScene: ( scene ) => set( { activeScene: scene } ),
-		incept: () => {
+		sceneImmersion: () => {
 
 			if ( ! get().present || ! get().future || get().activeScene === 2 ) return;
 			console.log( "inception" );
@@ -68,7 +68,7 @@ export const useClientStore = create<ClientStore>()( ( set, get ) => {
 			}, 1000 );
 
 		},
-		regress: () => {
+		sceneReversion: () => {
 
 			if ( ! get().present || ! get().future || get().activeScene === 1 ) return;
 			console.log( "regression" );

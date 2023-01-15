@@ -5,13 +5,14 @@ import Layout from '@/components/dom/Layout';
 import '@/styles/index.css';
 import Scroll from "@/templates/Scroll";
 import { SessionProvider } from "next-auth/react";
+import { trpc } from "../utils/trpc";
 
 const Scene = dynamic( () => import( '@/components/canvas/Scene' ), { ssr: true } );
 
-export default function App( {
+const App = ( {
 	Component,
 	pageProps = { title: 'Spotify WebGl Player', session, playlists, ...pageProps }
-} ) {
+} ) => {
 
 	const ref = useRef();
 	return (
@@ -39,4 +40,6 @@ export default function App( {
 		</>
 	);
 
-}
+};
+
+export default trpc.withTRPC( App );

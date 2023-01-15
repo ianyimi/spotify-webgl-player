@@ -1,18 +1,19 @@
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { spotifyApi } from "@/hooks/useSpotify";
-import { fetchPlaylistData } from "lib/api";
 import dynamic from "next/dynamic";
+import { trpc } from "../../utils/trpc";
 
 const VintageTelevision = dynamic( () => import( "@/models/VintageTelevision.tsx" ), { ssr: false } );
 
-export default function Playlist( { items } ) {
+export default function Playlist() {
 
 	const trackNames = [];
 
-	items.forEach( item => {
+	const { data } = trpc.fetchPlaylistData.useQuery( { id: "14d2JKBEDa3E0sr7idL3zZ" } );
 
-		if ( item.track === null ) return;
+	if ( ! data ) return <div>loading...</div>;
+
+	data.items.forEach( item => {
+
+		if ( ! item.track ) return;
 		const track = item.track;
 		trackNames.push(
 			<div key={track.id}>{track.name} - {track.artists[ 0 ].name}</div>
@@ -25,49 +26,25 @@ export default function Playlist( { items } ) {
 
 }
 
-Playlist.canvas = ( { url } ) => {
+Playlist.canvas = () => {
+
+	const { data } = trpc.fetchPlaylistData.useQuery( { id: "14d2JKBEDa3E0sr7idL3zZ" } );
+
+	if ( ! data ) {
+
+		return <group>
+			<mesh>
+				<boxBufferGeometry args={[ 0.5, 0.5, 0.5 ]} />
+				<meshBasicMaterial color="yellow" />
+			</mesh>
+		</group>;
+
+	}
+
+	console.log( data.items );
 
 	return <group>
-		<VintageTelevision url={url} route={"/"}/>
+		<VintageTelevision url={data.imageUrl} route={"/"}/>
 	</group>;
 
 };
-
-export async function getServerSideProps( { req, res, query } ) {
-
-	const session = await unstable_getServerSession( req, res, authOptions );
-
-	if ( ! session || ! ( Boolean( query.id ) ) ) return {
-		redirect: {
-			destination: "/login",
-			permanent: false
-		},
-	};
-
-	res.setHeader(
-		'Cache-Control',
-		'public, s-maxage=10, stale-while-revalidate=59'
-	);
-
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	spotifyApi.setAccessToken( session.user.accessToken );
-	const { url, items, error } = await fetchPlaylistData( spotifyApi, query.id );
-
-	if ( error ) return {
-
-		redirect: {
-			destination: "/login",
-			permanent: false
-		}
-
-	};
-
-	return {
-		props: {
-			url: await url ?? null,
-			items: await items ?? null
-		}
-	};
-
-}

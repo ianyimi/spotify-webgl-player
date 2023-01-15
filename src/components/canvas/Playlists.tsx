@@ -1,18 +1,24 @@
 import VintageTelevision from "@/models/VintageTelevision";
 // import { ScrollState } from "@/templates/Scroll";
-import { useRef, Suspense } from "react";
-import { useFrame } from "@react-three/fiber";
-import PortalScene from "./PortalScene";
+import { useRef, Suspense, ReactElement } from "react";
+import { Group } from "three";
+import { useFrame, GroupProps } from "@react-three/fiber";
+import PortalScene from "./PortalScene/index";
 
 const ERROR_IMAGE_URL = "https://dqeczc7c9n9n1.cloudfront.net/images/404.png";
 
 const DELTA = 0.003;
 
-export default function Playlists( props ) {
+type PlaylistsProps = {
+	playlists?: SpotifyApi.PlaylistObjectSimplified[],
+	rowLength?: number
+} & GroupProps
 
-	const group = useRef( null );
+export default function Playlists( props: PlaylistsProps ) {
+
+	const group = useRef<Group>( null );
 	const { playlists, rowLength } = props;
-	const screens = [];
+	const screens: ReactElement[] = [];
 
 	// for ( let z = 0, i = 0; z < Math.floor( playlists.length / rowLength ); z ++ ) {
 
@@ -21,6 +27,8 @@ export default function Playlists( props ) {
 		// for ( let x = 0; x < rowLength; x ++ ) {
 
 		for ( let x = 0; x < 3; x ++ ) {
+
+			if ( ! playlists ) continue;
 
 			if ( i < playlists.length ) {
 
@@ -34,6 +42,7 @@ export default function Playlists( props ) {
 						url={playlist?.images[ 0 ]?.url ?? ERROR_IMAGE_URL}
 						intensity={100}
 					>
+						{/* @ts-ignore */}
 						<PortalScene/>
 					</VintageTelevision>
 				);

@@ -5,7 +5,7 @@ export type PlaylistData = {
   items: SpotifyApi.PlaylistTrackObject[]
 }
 
-const PLAYLIST_TRACK_FIELDS = "items(is_local,track(album(name,artists,href),popularity,is_local,artists,duration_ms,explicit,href,id,is_playable,restrictions,name,track_number,type,uri))";
+const PLAYLIST_TRACK_FIELDS = "total,items(is_local,track(album(name,artists,type, uri),artists(id,name,type,uri),duration_ms,explicit,id,is_playable,name,track_number,type,uri))";
 
 export async function fetchPlaylistData( api: SpotifyApi, id: string ): Promise<PlaylistData> {
 

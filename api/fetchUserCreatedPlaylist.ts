@@ -1,6 +1,11 @@
 import { SpotifyApi, config, handleError } from "./index";
 
-export async function fetchUserCreatedPlaylists( api: SpotifyApi ) {
+export type UserCreatedPlaylistData = {
+  playlists: SpotifyApi.PlaylistObjectSimplified[],
+  total: number
+}
+
+export async function fetchUserCreatedPlaylists( api: SpotifyApi ): Promise<UserCreatedPlaylistData> {
 
 	try {
 
@@ -11,7 +16,8 @@ export async function fetchUserCreatedPlaylists( api: SpotifyApi ) {
 		if ( body.total < 50 ) {
 
 			return {
-				playlists: userCreatedPlaylists
+				playlists: userCreatedPlaylists,
+				total: userCreatedPlaylists.length
 			};
 
 		}
@@ -33,7 +39,7 @@ export async function fetchUserCreatedPlaylists( api: SpotifyApi ) {
 
 		return {
 			playlists: userCreatedPlaylists,
-			total: body.total
+			total: userCreatedPlaylists.length
 		};
 
 	} catch ( err ) {

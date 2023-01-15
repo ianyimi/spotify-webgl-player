@@ -1,6 +1,11 @@
 import { SpotifyApi, config, handleError } from "./index";
 
-export async function fetchPlaylistData( api: SpotifyApi, id: string ) {
+export type PlaylistData = {
+  url: string,
+  items: SpotifyApi.PlaylistTrackObject[]
+}
+
+export async function fetchPlaylistData( api: SpotifyApi, id: string ): Promise<PlaylistData> {
 
 	try {
 

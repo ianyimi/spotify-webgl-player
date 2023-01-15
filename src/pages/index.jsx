@@ -14,7 +14,7 @@ const Environment = dynamic( () => import( '@/components/canvas/Environment' ), 
 // Dom components go here
 export default function Page() {
 
-	const { data } = trpc.fetchCreatedPlaylists.useQuery();
+	const { data } = trpc.fetchUserCreatedPlaylists.useQuery();
 	if ( ! data ) {
 
 		return <div>Loading...</div>;
@@ -35,7 +35,7 @@ export default function Page() {
 // It will receive same props as the Page component (from getStaticProps, etc.)
 Page.canvas = () => {
 
-	const { data } = trpc.fetchCreatedPlaylists.useQuery();
+	const { data } = trpc.fetchUserCreatedPlaylists.useQuery();
 	if ( ! data ) {
 
 		return <group>

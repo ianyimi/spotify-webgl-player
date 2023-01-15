@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { procedure, router } from '../trpc';
 import { SpotifyApi } from '../context';
-import { fetchUserCreatedPlaylists } from 'api';
+import { fetchPlaylistData, fetchUserCreatedPlaylists } from 'api';
 import { isAuthorized } from './_middleware';
 
 export const appRouter = router( {
@@ -18,7 +18,7 @@ export const appRouter = router( {
 			};
 
 		} ),
-	fetchCreatedPlaylists: procedure
+	fetchUserCreatedPlaylists: procedure
 		.use( isAuthorized )
 		.query( async () => {
 
@@ -28,7 +28,23 @@ export const appRouter = router( {
 				total: data.total
 			};
 
-		} )
+		} ),
+	fetchPlaylistData: procedure
+		.use( isAuthorized )
+		.input(
+			z.object( {
+				id: z.string()
+			} )
+		)
+		.query( async ( { input } ) => {
+
+			const data = await fetchPlaylistData( SpotifyApi, input.id );
+			return {
+				url: data.url,
+				items: data.items
+			};
+
+		} ),
 } );
 
 // export type definition of API

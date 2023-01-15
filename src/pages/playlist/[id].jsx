@@ -1,8 +1,9 @@
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { spotifyApi } from "@/hooks/useSpotify";
-import { fetchPlaylistData } from "lib/api";
+import { fetchPlaylistData } from "api";
 import dynamic from "next/dynamic";
+import { trpc } from "../../utils/trpc";
 
 const VintageTelevision = dynamic( () => import( "@/models/VintageTelevision.tsx" ), { ssr: false } );
 
@@ -25,10 +26,23 @@ export default function Playlist( { items } ) {
 
 }
 
-Playlist.canvas = ( { url } ) => {
+Playlist.canvas = () => {
+
+	const { data } = trpc.fetchPlaylistData.useQuery();
+
+	if ( ! data ) {
+
+		return <group>
+			<mesh>
+				<boxBufferGeometry args={[ 0.5, 0.5, 0.5 ]} />
+				<meshBasicMaterial color="yellow" />
+			</mesh>
+		</group>;
+
+	}
 
 	return <group>
-		<VintageTelevision url={url} route={"/"}/>
+		<VintageTelevision url={data.url} route={"/"}/>
 	</group>;
 
 };

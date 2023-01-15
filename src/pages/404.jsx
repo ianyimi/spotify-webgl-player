@@ -1,4 +1,6 @@
-import VintageTelevision from "public/models/VintageTelevision";
+import dynamic from "next/dynamic";
+
+const VintageTelevision = dynamic( () => import( "@/models/VintageTelevision.tsx" ), { ssr: false } );
 
 export default function Error() {
 

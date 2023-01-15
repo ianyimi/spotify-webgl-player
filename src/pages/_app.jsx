@@ -5,13 +5,14 @@ import Layout from '@/components/dom/Layout';
 import '@/styles/index.css';
 import Scroll from "@/templates/Scroll";
 import { SessionProvider } from "next-auth/react";
+import { trpc } from "../utils/trpc";
 
 const Scene = dynamic( () => import( '@/components/canvas/Scene' ), { ssr: true } );
 
-export default function App( {
+const App = ( {
 	Component,
 	pageProps = { title: 'Spotify WebGl Player', session, playlists, ...pageProps }
-} ) {
+} ) => {
 
 	const ref = useRef();
 	return (
@@ -24,13 +25,9 @@ export default function App( {
          * Since the event source is now shared, the canvas would block events, we prevent that with pointerEvents: none. */}
 					{( Boolean( ( Component?.canvas ) ) ) && (
 						<Scene
-							className="pointer-events-none"
+							// className="pointer-events-none"
 							eventSource={ref}
 							eventPrefix="client"
-							camera={{
-								// position: [ 10, 5, 5 ]
-								position: [ 0, 1, 5 ]
-							}}
 						>
 							{Component.canvas( pageProps )}
 						</Scene>
@@ -43,4 +40,6 @@ export default function App( {
 		</>
 	);
 
-}
+};
+
+export default trpc.withTRPC( App );

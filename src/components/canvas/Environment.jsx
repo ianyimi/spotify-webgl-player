@@ -1,26 +1,32 @@
 import { MeshReflectorMaterial } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { Object3D } from "three";
-import { useEffect } from "react";
+import { Vector3 } from "three";
+import { useEffect, useMemo } from "react";
 import usePostProcess from "@/templates/hooks/usePostprocess";
-import { useSceneStore } from "@/hooks/useStore";
+import { useClientStore } from "@/hooks/useStore";
+import { CameraRig } from "three-story-controls";
 
 export default function Environment( props ) {
 
 	const { scene, camera, gl } = useThree();
-	const [ present, setPresent, setActiveScene ] = useSceneStore( state => [ state.present, state.setPresent, state.setActiveScene ] );
+	const [ present, setPresent, setActiveScene ] = useClientStore( state => [ state.present, state.setPresent, state.setActiveScene ] );
+	const rig = useMemo( () => {
+
+		console.log( CameraRig );
+		return new CameraRig( camera, scene );
+
+	}, [ scene, camera ] );
 
 	usePostProcess();
-	console.log( "test", present?.camera );
 	useEffect( () => {
 
 		camera && camera.lookAt( camera.position.x, 0, 0 );
-		console.log( "setPresent", gl );
-		setPresent( gl, scene, camera );
-		// setActiveScene( 1 );
-		// forward();
 
-	}, [ gl, scene ] );
+		const { position, quaternion } = rig.getWorldCoordinates();
+		rig.flyTo( new Vector3( 0, 1, 20 ), quaternion, 0 );
+		setPresent( gl, scene, camera, rig );
+
+	}, [] );
 
 	return (
 		<group {...props}>

@@ -1,8 +1,8 @@
 {
   "root": true,
   "extends": [
-    "next",
     "mdcs",
+    "next",
     "plugin:tailwind/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
@@ -19,7 +19,9 @@
   "rules": {
     "import/prefer-default-export": "off",
     "no-console": "warn",
-    "no-var": "error"
+    "no-var": "error",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-non-null-assertion": "off"
   },
   "settings": {
     "import/parsers": {

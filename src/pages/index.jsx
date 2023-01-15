@@ -1,8 +1,4 @@
 import dynamic from 'next/dynamic';
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
-import { SpotifyApi } from "../server/context";
-import { fetchUserLikedPlaylists } from "lib/api";
 import { trpc } from "../utils/trpc";
 // import Dashboard from '@/components/dom/Dashboard';
 
@@ -16,7 +12,7 @@ const Environment = dynamic( () => import( '@/components/canvas/Environment' ), 
 // const CameraRig = dynamic( () => import( "three-story-controls" ).then( c => c.CameraRig ), { ssr: false } );
 
 // Dom components go here
-export default function Page( { playlists } ) {
+export default function Page() {
 
 	const { data } = trpc.fetchCreatedPlaylists.useQuery();
 	if ( ! data ) {
@@ -24,8 +20,6 @@ export default function Page( { playlists } ) {
 		return <div>Loading...</div>;
 
 	}
-
-	console.log( data.playlists );
 
 	return (
 		<div>
@@ -39,12 +33,24 @@ export default function Page( { playlists } ) {
 
 // Canvas components go here
 // It will receive same props as the Page component (from getStaticProps, etc.)
-Page.canvas = ( { playlists, login } ) => {
+Page.canvas = () => {
+
+	const { data } = trpc.fetchCreatedPlaylists.useQuery();
+	if ( ! data ) {
+
+		return <group>
+			<mesh>
+				<boxBufferGeometry args={[ 0.5, 0.5, 0.5 ]} />
+				<meshBasicMaterial color="yellow" />
+			</mesh>
+		</group>;
+
+	}
 
 	return (
 		<group>
 			<Environment/>
-			{( Boolean( playlists ) ) && <Playlists playlists={playlists} rowLength={5} position-y={- 1}/>}
+			<Playlists playlists={data.playlists} rowLength={5} position-y={- 1}/>
 			<mesh position-z={2.5}>
 				<boxGeometry args={[ 1, 1 ]}/>
 				<meshStandardMaterial color="green"/>
@@ -53,40 +59,3 @@ Page.canvas = ( { playlists, login } ) => {
 	);
 
 };
-
-export async function getServerSideProps( { req, res } ) {
-
-	const session = await unstable_getServerSession( req, res, authOptions );
-
-	if ( ! session ) return {
-		redirect: {
-			destination: "login",
-			permanent: false
-		},
-	};
-
-	res.setHeader(
-		'Cache-Control',
-		'public, s-maxage=10, stale-while-revalidate=59'
-	);
-
-	SpotifyApi.setAccessToken( session.user.accessToken );
-	const { total, playlists, error } = await fetchUserLikedPlaylists( SpotifyApi );
-
-	if ( error ) return {
-		redirect: {
-			destination: "login",
-			permanent: false
-		}
-	};
-
-	return {
-		props: {
-			title: "Spotify WebGl Player",
-			session: session,
-			total: await total ?? null,
-			playlists: await playlists ?? null,
-		}
-	};
-
-}

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { procedure, router } from '../trpc';
 import { SpotifyApi } from '../context';
-import { fetchUserCreatedPlaylists } from 'lib/api';
+import { fetchUserCreatedPlaylists } from 'api';
 import { isAuthorized } from './_middleware';
 
 export const appRouter = router( {

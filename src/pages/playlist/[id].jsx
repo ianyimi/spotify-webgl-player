@@ -3,7 +3,7 @@ import { trpc } from "../../utils/trpc";
 
 const VintageTelevision = dynamic( () => import( "@/models/VintageTelevision.tsx" ), { ssr: false } );
 
-export default function Playlist( { items } ) {
+export default function Playlist() {
 
 	const trackNames = [];
 

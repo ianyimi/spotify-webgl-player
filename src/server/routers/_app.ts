@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { procedure, router } from '../trpc';
-import { SpotifyApi, SessionContext } from '../context';
+import { SpotifyApi } from '../context';
 import { fetchPlaylistData, fetchUserCreatedPlaylists, fetchUserLikedPlaylists } from 'api';
 import { isAuthorized } from './_middleware';
 

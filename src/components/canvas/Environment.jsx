@@ -12,7 +12,6 @@ export default function Environment( props ) {
 	const [ present, setPresent, setActiveScene ] = useClientStore( state => [ state.present, state.setPresent, state.setActiveScene ] );
 	const rig = useMemo( () => {
 
-		console.log( CameraRig );
 		return new CameraRig( camera, scene );
 
 	}, [ scene, camera ] );
@@ -20,13 +19,16 @@ export default function Environment( props ) {
 	usePostProcess();
 	useEffect( () => {
 
-		camera && camera.lookAt( camera.position.x, 0, 0 );
+		camera && camera.lookAt( 0, 0, 0 );
 
 		const { position, quaternion } = rig.getWorldCoordinates();
-		rig.flyTo( new Vector3( 0, 1, 20 ), quaternion, 0 );
+		rig.flyTo( new Vector3( 0, 5, 20 ), quaternion, 0 );
 		setPresent( gl, scene, camera, rig );
 
 	}, [] );
+
+	// const { quaternion } = rig.getWorldCoordinates();
+	// rig.flyTo( new Vector3( 0, 1, 20 ), quaternion, 0 );
 
 	return (
 		<group {...props}>

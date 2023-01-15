@@ -7,6 +7,7 @@ import { Group, Mesh, MeshStandardMaterial, MeshPhysicalMaterial, Scene, Perspec
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { useCursor, useFBO, useGLTF } from '@react-three/drei';
 import { GLTF } from 'three-stdlib';
+import { Quaternion } from "three";
 
 import { gsap } from "gsap";
 import { useSceneMaterial } from "../../public/shaders/scene/index";
@@ -14,6 +15,7 @@ import { useRouter } from "next/router";
 import { useFrame, useThree, createPortal } from "@react-three/fiber";
 import { useClientStore } from "@/hooks/useStore";
 import { CameraRig } from "three-story-controls";
+import { AnimationDuration, AnimationEase } from 'types/common';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -43,6 +45,8 @@ export default function Model( props: VintageTelevisionProps ) {
 	const router = useRouter();
 	const group = useRef<Group>( null );
 	const [ hovered, hover ] = useState( false );
+	const worldPosition = useRef( new Vector3() );
+	const worldQuaternion = useRef( new Quaternion() );
 	const { url = URL_NOT_FOUND, route, index = 0, intensity = 200, children, ...restProps } = props;
 	const { nodes, materials } = useGLTF( FILE_URL ) as unknown as GLTFResult;
 
@@ -68,6 +72,17 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		camera.aspect = 0.5 / 0.42;
 		camera.updateProjectionMatrix();
+
+		if ( group.current ) {
+
+			group.current.getWorldPosition( worldPosition.current );
+			group.current.getWorldQuaternion( worldQuaternion.current );
+
+			worldPosition.current.y += 1.25;
+			worldPosition.current.z += 4;
+			worldQuaternion.current.normalize().invert();
+
+		}
 
 	}, [] );
 
@@ -120,18 +135,24 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		// e.preventDefault();
 		if ( ! present || activeScene === 2 ) return;
+		if ( ! worldPosition.current || ! worldQuaternion.current ) return;
 		setFuture( fbo.current, scene, camera, cameraRig.current );
-		incept();
-		setTimeout( () => {
+		present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
+		// incept();
+		// setTimeout( () => {
 
-			regress();
+		// 	regress();
 
-		}, 3000 );
+		// }, 3000 );
 
 	};
 
 	return (
 		<group ref={group} {...restProps} dispose={null}>
+			{/* <mesh position={[ 0, 1.25, 2 ]}>
+				<boxBufferGeometry args={[ 1.25, 1.25, 1.25 ]} />
+				<meshBasicMaterial color="red" />
+			</mesh> */}
 			<group
 				name="Scene"
 				onClick={( e ) => handleClick( e )}

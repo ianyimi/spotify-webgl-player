@@ -4,6 +4,7 @@ import type { CameraRig } from "three-story-controls";
 import { Vector3 } from "three";
 import create from "zustand";
 import { gsap } from "gsap";
+import { AnimationDuration, AnimationEase } from "types/common";
 
 export type CustomScene = {
 	gl: WebGLRenderTarget,
@@ -27,9 +28,6 @@ type ClientStore = {
 	incept: () => void,
 	regress: () => void
 }
-
-const DURATION = 2;
-const EASE = "power3.inOut";
 
 export const useClientStore = create<ClientStore>()( ( set, get ) => {
 
@@ -58,12 +56,12 @@ export const useClientStore = create<ClientStore>()( ( set, get ) => {
 
 			const { position: p1, quaternion: q1 } = get().present!.rig.getWorldCoordinates();
 			const { position: p2, quaternion: q2 } = get().future!.rig.getWorldCoordinates();
-			get().present!.rig.flyTo( new Vector3( p1.x, p1.y, p1.z - 5 ), q1, 2, EASE );
-			get().future!.rig.flyTo( new Vector3( p2.x, p2.y, p2.z - 5 ), q2, 2, EASE );
+			get().present!.rig.flyTo( new Vector3( p1.x, p1.y, p1.z - 5 ), q1, AnimationDuration.SceneImmersion, AnimationEase.CubicBezier );
+			get().future!.rig.flyTo( new Vector3( p2.x, p2.y, p2.z - 5 ), q2, AnimationDuration.SceneImmersion, AnimationEase.CubicBezier );
 			setTimeout( () => {
 
 				set( { activeScene: 2 } );
-				gsap.to( get().paneSettings, { scale: 3, distortion: 1, duration: 0.5, ease: EASE } );
+				gsap.to( get().paneSettings, { scale: 3, distortion: 1, duration: AnimationDuration.SceneReversion, ease: AnimationEase.CubicBezier } );
 				get().future!.camera.aspect = get().present!.camera.aspect;
 				get().future!.camera.updateProjectionMatrix();
 
@@ -76,10 +74,10 @@ export const useClientStore = create<ClientStore>()( ( set, get ) => {
 			console.log( "regression" );
 
 			const { position: p2, quaternion: q2 } = get().future!.rig.getWorldCoordinates();
-			get().future!.rig.flyTo( new Vector3( p2.x, p2.y, p2.z + 5 ), q2, 2, EASE );
-			gsap.to( get().paneSettings, { scale: 0, distortion: 0, duration: 0.5, ease: EASE } );
+			get().future!.rig.flyTo( new Vector3( p2.x, p2.y, p2.z + 5 ), q2, 2, AnimationEase.CubicBezier );
+			gsap.to( get().paneSettings, { scale: 0, distortion: 0, duration: 0.5, ease: AnimationEase.CubicBezier } );
 			const { position: p1, quaternion: q1 } = get().present!.rig.getWorldCoordinates();
-			get().present!.rig.flyTo( new Vector3( p1.x, p1.y, p1.z + 5 ), q1, 2, EASE );
+			get().present!.rig.flyTo( new Vector3( p1.x, p1.y, p1.z + 5 ), q1, 2, AnimationEase.CubicBezier );
 			setTimeout( () => {
 
 				set( { activeScene: 1 } );

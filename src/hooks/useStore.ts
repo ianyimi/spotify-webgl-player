@@ -52,12 +52,11 @@ export const useClientStore = create<ClientStore>()( ( set, get ) => {
 		sceneImmersion: () => {
 
 			if ( ! get().present || ! get().future || get().activeScene === 2 ) return;
-			console.log( "inception" );
 
 			const { position: p1, quaternion: q1 } = get().present!.rig.getWorldCoordinates();
 			const { position: p2, quaternion: q2 } = get().future!.rig.getWorldCoordinates();
-			get().present!.rig.flyTo( new Vector3( p1.x, p1.y, p1.z - 5 ), q1, AnimationDuration.SceneImmersion, AnimationEase.CubicBezier );
-			get().future!.rig.flyTo( new Vector3( p2.x, p2.y, p2.z - 5 ), q2, AnimationDuration.SceneImmersion, AnimationEase.CubicBezier );
+			get().present!.rig.flyTo( new Vector3( p1.x, p1.y, p1.z - 4 ), q1, AnimationDuration.SceneImmersion, AnimationEase.CubicBezier );
+			get().future!.rig.flyTo( new Vector3( p2.x, p2.y, p2.z - 4 ), q2, AnimationDuration.SceneImmersion, AnimationEase.CubicBezier );
 			setTimeout( () => {
 
 				set( { activeScene: 2 } );
@@ -71,16 +70,17 @@ export const useClientStore = create<ClientStore>()( ( set, get ) => {
 		sceneReversion: () => {
 
 			if ( ! get().present || ! get().future || get().activeScene === 1 ) return;
-			console.log( "regression" );
 
 			const { position: p2, quaternion: q2 } = get().future!.rig.getWorldCoordinates();
-			get().future!.rig.flyTo( new Vector3( p2.x, p2.y, p2.z + 5 ), q2, 2, AnimationEase.CubicBezier );
+			get().future!.rig.flyTo( new Vector3( p2.x, p2.y, p2.z + 4 ), q2, 2, AnimationEase.CubicBezier );
 			gsap.to( get().paneSettings, { scale: 0, distortion: 0, duration: 0.5, ease: AnimationEase.CubicBezier } );
 			const { position: p1, quaternion: q1 } = get().present!.rig.getWorldCoordinates();
-			get().present!.rig.flyTo( new Vector3( p1.x, p1.y, p1.z + 5 ), q1, 2, AnimationEase.CubicBezier );
+			get().present!.rig.flyTo( new Vector3( p1.x, p1.y, p1.z + 4 ), q1, 2, AnimationEase.CubicBezier );
 			setTimeout( () => {
 
 				set( { activeScene: 1 } );
+				get().future!.camera.aspect = 0.5 / 0.42;
+				get().future!.camera.updateProjectionMatrix();
 
 			}, 1000 );
 

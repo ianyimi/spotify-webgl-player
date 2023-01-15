@@ -21,6 +21,8 @@ export default function Page() {
 
 	}
 
+	console.log( data.playlists[ 2 ].id );
+
 	return (
 		<div>
 			{data.playlists.map( ( p, i ) => <p key={i}>{p.name}</p> )}

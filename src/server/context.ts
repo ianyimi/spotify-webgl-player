@@ -46,6 +46,7 @@ export async function refreshAccessToken( token ) {
 		const refreshedToken = data.access_token;
 		SpotifyApi.setAccessToken( refreshedToken );
 
+		console.log( "refreshed access token successfully" );
 		return {
 			...token,
 			accessToken: refreshedToken,
@@ -56,6 +57,7 @@ export async function refreshAccessToken( token ) {
 
 	} catch ( error ) {
 
+		console.log( "resfresh access token error" );
 		return {
 			...token,
 			error: "RefreshAccessTokenError"

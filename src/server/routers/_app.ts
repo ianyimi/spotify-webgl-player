@@ -50,7 +50,7 @@ export const appRouter = router( {
 
 			const data = await fetchPlaylistData( SpotifyApi, input.id );
 			return {
-				url: data.url,
+				imageUrl: data.imageUrl,
 				items: data.items
 			};
 

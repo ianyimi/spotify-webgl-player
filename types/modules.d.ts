@@ -1,1 +1,2 @@
-declare module "three-story-controls";
+declare module "@/components/canvas/Playlists";
+declare module "@/components/canvas/Environment";

@@ -50,7 +50,8 @@ Page.canvas = () => {
 	return (
 		<group>
 			<Environment/>
-			<Playlists playlists={data.playlists} rowLength={5} position-y={- 1}/>
+			{/* @ts-ignore */}
+			{data && <Playlists playlists={data.playlists} rowLength={5} position-y={- 1}/>}
 			<mesh position-z={2.5}>
 				<boxGeometry args={[ 1, 1 ]}/>
 				<meshStandardMaterial color="green"/>

@@ -1,14 +1,13 @@
-import { TRPCError } from "@trpc/server";
+import { signIn } from "next-auth/react";
 import { middleware } from "../trpc";
 
 export const isAuthorized = middleware( ( { next, ctx } ) => {
 
-	if ( ! ctx.session ) {
+	// REFRESH ACCESS TOKEN HERE
+	if ( ctx?.session?.error === "ResfreshAccessTokenError" ) {
 
-		throw new TRPCError( {
-			code: 'UNAUTHORIZED',
-			message: 'You are not authorized',
-		} );
+		console.log( "expired token" );
+		// signIn( "spotify", { callbackUrl: "/" } );
 
 	}
 

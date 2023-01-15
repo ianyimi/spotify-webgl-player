@@ -28,7 +28,7 @@ export default function Playlist( { items } ) {
 
 Playlist.canvas = () => {
 
-	const { data } = trpc.fetchPlaylistData.useQuery();
+	const { data } = trpc.fetchPlaylistData.useQuery( { id: "hello" } );
 
 	if ( ! data ) {
 

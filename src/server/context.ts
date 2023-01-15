@@ -34,3 +34,33 @@ export async function createContext( { req, res }: CreateNextContextOptions ) {
 }
 
 export type SessionContext = inferAsyncReturnType<typeof createContext>
+
+export async function refreshAccessToken( token ) {
+
+	try {
+
+		SpotifyApi.setAccessToken( token.accessToken );
+		SpotifyApi.setRefreshToken( token.refreshToken );
+		const { body: data } = await SpotifyApi.refreshAccessToken();
+
+		const refreshedToken = data.access_token;
+		SpotifyApi.setAccessToken( refreshedToken );
+
+		return {
+			...token,
+			accessToken: refreshedToken,
+			accessTokenExpires: Date.now() + data.expires_in * 1000,
+			refreshToken: data.refresh_token ?? token.refreshToken,
+		};
+
+
+	} catch ( error ) {
+
+		return {
+			...token,
+			error: "RefreshAccessTokenError"
+		};
+
+	}
+
+}

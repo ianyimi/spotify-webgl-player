@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { procedure, router } from '../trpc';
 import { SpotifyApi } from '../context';
 import { fetchUserCreatedPlaylists } from 'lib/api';
+import { isAuthorized } from './_middleware';
 
 export const appRouter = router( {
 	hello: procedure
@@ -18,13 +19,13 @@ export const appRouter = router( {
 
 		} ),
 	fetchCreatedPlaylists: procedure
+		.use( isAuthorized )
 		.query( async () => {
 
 			const data = await fetchUserCreatedPlaylists( SpotifyApi );
-			console.log( "🚀 ~ file: _app.ts:24 ~ .query ~ SpotifyApi", SpotifyApi );
-			console.log( "🚀 ~ file: _app.ts:29 ~ .query ~ data", await data );
 			return {
-				playlists: await data
+				playlists: data.playlists,
+				total: data.total
 			};
 
 		} )

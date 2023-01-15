@@ -1,20 +1,20 @@
 import NextAuth from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 import { LOGIN_URL } from "lib/spotify";
-import { spotifyApi } from "@/hooks/useSpotify";
+import { SpotifyApi } from "@/hooks/useSpotify";
 
 async function refreshAccessToken( token ) {
 
 	try {
 
 		// spotifyApi.setAccessToken( token.accessToken );
-		spotifyApi.setAccessToken( token.accessToken );
-		spotifyApi.setRefreshToken( token.refreshToken );
-		spotifyApi.refreshAccessToken().then( ( data ) => {
+		SpotifyApi.setAccessToken( token.accessToken );
+		SpotifyApi.setRefreshToken( token.refreshToken );
+		SpotifyApi.refreshAccessToken().then( ( data ) => {
 
 			const refreshedToken = data.body[ "access_token" ];
 			console.log( "REFRESHED TOKEN IS", refreshedToken );
-			spotifyApi.setAccessToken( refreshedToken );
+			SpotifyApi.setAccessToken( refreshedToken );
 			return {
 				...token,
 				accessToken: refreshedToken,

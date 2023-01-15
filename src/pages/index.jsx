@@ -18,18 +18,18 @@ const Environment = dynamic( () => import( '@/components/canvas/Environment' ), 
 // Dom components go here
 export default function Page( { playlists } ) {
 
-	const hello = trpc.fetchCreatedPlaylists.useQuery();
-	if ( ! hello.data ) {
+	const { data } = trpc.fetchCreatedPlaylists.useQuery();
+	if ( ! data ) {
 
 		return <div>Loading...</div>;
 
 	}
 
-	console.log( hello.data );
+	console.log( data.playlists );
 
 	return (
 		<div>
-			<p>Loaded</p>
+			{data.playlists.map( ( p, i ) => <p key={i}>{p.name}</p> )}
 			{/* <Pane/> */}
 			{/*<Dashboard playlists={playlists}/>*/}
 		</div>

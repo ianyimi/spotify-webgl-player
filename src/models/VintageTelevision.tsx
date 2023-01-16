@@ -43,12 +43,16 @@ const glassMat = new MeshPhysicalMaterial( { roughness: 0, transmission: 1 } );
 const FILE_URL = "https://dqeczc7c9n9n1.cloudfront.net/models/vintageTelevision-1672798597/vintageTelevision.glb.gz";
 const URL_NOT_FOUND = "https://dqeczc7c9n9n1.cloudfront.net/images/404.png";
 
+const UP_VECTOR = new Vector3( 0, 5, 7 );
+const DOWN_VECTOR = new Vector3( 0, 1.5, 4 );
+const DOWN_ANGLE = 0.35;
+
 export default function Model( props: VintageTelevisionProps ) {
 
 	const router = useRouter();
 	const group = useRef<Group>( null );
 	const [ hovered, hover ] = useState( false );
-	const dummyCamera = useRef( new Object3D() );
+	const dummyCameraGroup = useRef( new Group() );
 	const worldPosition = useRef( new Vector3() );
 	const worldQuaternion = useRef( new Quaternion() );
 	const { url = URL_NOT_FOUND, playlistID, focusedPlaylist, setFocusPlaylistID, index = 0, intensity = 200, children, ...restProps } = props;
@@ -88,8 +92,8 @@ export default function Model( props: VintageTelevisionProps ) {
 			group.current.getWorldPosition( worldPosition.current );
 			group.current.getWorldQuaternion( worldQuaternion.current );
 
-			worldPosition.current.y += 1.25;
-			worldPosition.current.z += 4;
+			worldPosition.current.add( UP_VECTOR );
+			worldQuaternion.current.x += DOWN_ANGLE;
 			worldQuaternion.current.normalize().invert();
 
 		}
@@ -98,16 +102,19 @@ export default function Model( props: VintageTelevisionProps ) {
 
 	useFrame( ( state ) => {
 
+		if ( ! group.current ) return;
 		// Copy the default cameras whereabouts
 		if ( ! cameraInit.current ) {
 
 			futureCamera.position.copy( state.camera.position );
 			futureCamera.rotation.copy( state.camera.rotation );
 			futureCamera.scale.copy( state.camera.scale );
-			dummyCamera.current.position.copy( state.camera.position );
-			dummyCamera.current.rotation.copy( state.camera.rotation );
-			dummyCamera.current.scale.copy( state.camera.scale );
-			dummyCamera.current.lookAt( new Vector3() );
+
+			state.camera.getWorldPosition( dummyCameraGroup.current.position );
+			state.camera.getWorldQuaternion( dummyCameraGroup.current.quaternion );
+			state.camera.getWorldScale( dummyCameraGroup.current.scale );
+			dummyCameraGroup.current.quaternion.normalize().invert();
+
 			cameraInit.current = true;
 
 		}
@@ -143,13 +150,23 @@ export default function Model( props: VintageTelevisionProps ) {
 		if ( ! worldPosition.current || ! worldQuaternion.current ) return;
 		if ( focusedPlaylist === playlistID ) {
 
-			present.rig.flyTo( group.current.position, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
-			sceneImmersion();
+			worldPosition.current.sub( UP_VECTOR ).add( DOWN_VECTOR );
+			worldQuaternion.current.x += DOWN_ANGLE;
+			present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
 			setTimeout( () => {
 
-				sceneReversion();
+				present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
+				sceneImmersion();
+				setTimeout( () => {
 
-			}, 3000 );
+					sceneReversion();
+					worldPosition.current.sub( DOWN_VECTOR ).add( UP_VECTOR );
+					present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
+					worldQuaternion.current.x -= DOWN_ANGLE;
+
+				}, 3000 );
+
+			}, AnimationDuration.CameraMotion * 1000 + 200 );
 
 		}
 
@@ -157,7 +174,6 @@ export default function Model( props: VintageTelevisionProps ) {
 		setFocusPlaylistID && setFocusPlaylistID( playlistID ?? "" );
 		setFuture( fbo.current, futureScene, futureCamera, cameraRig.current );
 		present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
-
 
 	};
 

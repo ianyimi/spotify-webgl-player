@@ -23,9 +23,8 @@ export default function Environment( props ) {
 		// camera && camera.lookAt( 0, 0, 0 );
 
 		const { position, quaternion } = rig.getWorldCoordinates();
-		rig.flyTo( new Vector3( 0, 5, 20 ), quaternion, 0 );
-		// rig.do( CameraAction.Tilt, - Math.PI / 2 );
-		console.log( "sp" );
+		rig.flyTo( new Vector3( 0, 5, 25 ), quaternion, 0 );
+		rig.do( CameraAction.Tilt, - Math.PI / 6 );
 		setPresent( gl, scene, camera, rig );
 
 	}, [ camera, scene, rig, gl, setPresent ] );

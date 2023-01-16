@@ -4,7 +4,8 @@ import type { CameraRig } from "three-story-controls";
 import { Vector3 } from "three";
 import create from "zustand";
 import { gsap } from "gsap";
-import { AnimationDuration, AnimationEase } from "types/common";
+import { AnimationDuration, AnimationEase, CameraAnimationStatus } from "types/common";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export type CustomScene = {
 	gl: WebGLRenderTarget,
@@ -17,6 +18,8 @@ type SetCustomScene = ( gl: WebGLRenderTarget, scene: Scene, camera: Perspective
 
 type ClientStore = {
 	activeScene: number,
+	// cameraAnimationStatus: CameraAnimationStatus,
+	// setCameraAnimationStatus: Dispatch<SetStateAction<CameraAnimationStatus>>
 	setActiveScene: ( scene: number ) => void,
 	past?: CustomScene,
 	present?: CustomScene,
@@ -33,10 +36,13 @@ export const useClientStore = create<ClientStore>()( ( set, get ) => {
 
 	// const renderTarget = new THREE.WebGLRenderTarget( 512, 512, { samples: 4, encoding: gl.encoding } );
 	// renderTarget.depthTexture = new THREE.DepthTexture();
+	// const [ cameraAnimationStatus, setCameraAnimationStatus ] = useState<CameraAnimationStatus>( CameraAnimationStatus.idle );
 
 	return {
 		// This value gets animated in Postprocessing shader
 		activeScene: 1,
+		// cameraAnimationStatus: cameraAnimationStatus,
+		// setCameraAnimationStatus: setCameraAnimationStatus,
 		past: undefined,
 		present: undefined,
 		future: undefined,

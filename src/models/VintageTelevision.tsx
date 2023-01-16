@@ -14,8 +14,8 @@ import { useSceneMaterial } from "../../public/shaders/scene/index";
 import { useRouter } from "next/router";
 import { useFrame, useThree, createPortal, ThreeEvent } from "@react-three/fiber";
 import { useClientStore } from "@/hooks/useStore";
-import { CameraRig } from "three-story-controls";
-import { AnimationDuration, AnimationEase } from 'types/common';
+import { CameraAction, CameraRig } from "three-story-controls";
+import { AnimationDuration, AnimationEase, CameraAnimationStatus } from 'types/common';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -31,6 +31,8 @@ type GLTFResult = GLTF & {
 type VintageTelevisionProps = {
   intensity?: number,
 	playlistID?: string,
+	cameraAnimationStatus?: CameraAnimationStatus,
+	setCameraAnimationStatus?: Dispatch<SetStateAction<CameraAnimationStatus>>,
   route?: string,
   url?: string,
   index?: number,
@@ -55,7 +57,7 @@ export default function Model( props: VintageTelevisionProps ) {
 	const dummyCameraGroup = useRef( new Group() );
 	const worldPosition = useRef( new Vector3() );
 	const worldQuaternion = useRef( new Quaternion() );
-	const { url = URL_NOT_FOUND, playlistID, focusedPlaylist, setFocusPlaylistID, index = 0, intensity = 200, children, ...restProps } = props;
+	const { url = URL_NOT_FOUND, cameraAnimationStatus, setCameraAnimationStatus, playlistID, focusedPlaylist, setFocusPlaylistID, index = 0, intensity = 200, children, ...restProps } = props;
 	const { nodes, materials } = useGLTF( FILE_URL ) as unknown as GLTFResult;
 
 	useCursor( hovered );
@@ -146,10 +148,12 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		e.intersections.length = 1;
 
+		if ( cameraAnimationStatus !== CameraAnimationStatus.idle ) return;
 		if ( ! present || ! group.current || activeScene === 2 ) return;
 		if ( ! worldPosition.current || ! worldQuaternion.current ) return;
 		if ( focusedPlaylist === playlistID ) {
 
+			setCameraAnimationStatus && setCameraAnimationStatus( CameraAnimationStatus.animating );
 			worldPosition.current.sub( UP_VECTOR ).add( DOWN_VECTOR );
 			worldQuaternion.current.x += DOWN_ANGLE;
 			present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
@@ -163,6 +167,7 @@ export default function Model( props: VintageTelevisionProps ) {
 					worldPosition.current.sub( DOWN_VECTOR ).add( UP_VECTOR );
 					present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
 					worldQuaternion.current.x -= DOWN_ANGLE;
+					setTimeout( () => setCameraAnimationStatus && setCameraAnimationStatus( CameraAnimationStatus.idle ), AnimationDuration.CameraMotion * 1000 + 500 );
 
 				}, 3000 );
 
@@ -170,10 +175,12 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		}
 
+		setCameraAnimationStatus && setCameraAnimationStatus( CameraAnimationStatus.animating );
 		tvMat.uniforms.altScene.value = 1;
 		setFocusPlaylistID && setFocusPlaylistID( playlistID ?? "" );
 		setFuture( fbo.current, futureScene, futureCamera, cameraRig.current );
 		present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
+		setTimeout( () => setCameraAnimationStatus && setCameraAnimationStatus( CameraAnimationStatus.idle ), AnimationDuration.CameraMotion * 1000 );
 
 	};
 

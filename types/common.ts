@@ -9,3 +9,8 @@ export enum AnimationDuration {
 export enum AnimationEase {
   CubicBezier = "power3.inOut"
 }
+
+export enum CameraAnimationStatus {
+  animating = "animating",
+  idle = "idle"
+}

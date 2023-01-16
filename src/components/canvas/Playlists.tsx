@@ -4,6 +4,7 @@ import { useRef, useState, Suspense, ReactElement } from "react";
 import { Group } from "three";
 import { useFrame, GroupProps } from "@react-three/fiber";
 import PortalScene from "./PortalScene/index";
+import { CameraAnimationStatus } from "types/common";
 
 const ERROR_IMAGE_URL = "https://dqeczc7c9n9n1.cloudfront.net/images/404.png";
 
@@ -21,6 +22,7 @@ export default function Playlists( props: PlaylistsProps ) {
 	const { playlists, total, rowLength = 5 } = props;
 	const screens: ReactElement[] = [];
 	const [ focusedPlaylist, setFocusPlaylistID ] = useState( "" );
+	const [ cameraAnimationStatus, setCameraAnimationStatus ] = useState( CameraAnimationStatus.idle );
 
 	for ( let z = 0, i = 0; z < Math.floor( total / rowLength ); z ++ ) {
 
@@ -37,6 +39,8 @@ export default function Playlists( props: PlaylistsProps ) {
 					<VintageTelevision
 						key={playlist.id}
 						playlistID={playlist.id}
+						cameraAnimationStatus={cameraAnimationStatus}
+						setCameraAnimationStatus={setCameraAnimationStatus}
 						route={`/playlist/${playlist.id}`}
 						position-x={5 * x}
 						position-z={7 * z}

@@ -12,7 +12,7 @@ import { Quaternion, Object3D } from "three";
 import { gsap } from "gsap";
 import { useSceneMaterial } from "../../public/shaders/scene/index";
 import { useRouter } from "next/router";
-import { useFrame, useThree, createPortal } from "@react-three/fiber";
+import { useFrame, useThree, createPortal, ThreeEvent } from "@react-three/fiber";
 import { useClientStore } from "@/hooks/useStore";
 import { CameraRig } from "three-story-controls";
 import { AnimationDuration, AnimationEase } from 'types/common';
@@ -135,9 +135,10 @@ export default function Model( props: VintageTelevisionProps ) {
 
 	}, [] );
 
-	const handleClick = ( e ) => {
+	const handleClick = ( e: ThreeEvent<MouseEvent> ) => {
 
-		// e.preventDefault();
+		e.intersections.length = 1;
+
 		if ( ! present || ! group.current || activeScene === 2 ) return;
 		if ( ! worldPosition.current || ! worldQuaternion.current ) return;
 		if ( focusedPlaylist === playlistID ) {

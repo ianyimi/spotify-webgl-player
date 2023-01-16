@@ -23,14 +23,14 @@ export default function Playlists( props: PlaylistsProps ) {
 	const screens: ReactElement[] = [];
 	const [ focusedPlaylist, setFocusPlaylistID ] = useState( "" );
 	const [ cameraAnimationStatus, setCameraAnimationStatus ] = useState( CameraAnimationStatus.idle );
+	const totalRows = Math.floor( total / rowLength );
+	const xOffset = useRef( 0 );
 
-	for ( let z = 0, i = 0; z < Math.floor( total / rowLength ); z ++ ) {
+	for ( let z = 0, i = 0; z < totalRows; z ++ ) {
 
-		// for ( let z = 0, i = 0; z < 3; z ++ ) {
+		if ( 2 * z >= totalRows ) xOffset.current = z;
 
 		for ( let x = 0; x < rowLength; x ++ ) {
-
-			// for ( let x = 0; x < 3; x ++ ) {
 
 			if ( i < playlists.length ) {
 
@@ -81,9 +81,11 @@ export default function Playlists( props: PlaylistsProps ) {
 
 	} );
 
-	return <group ref={group}>
+	return <group>
 		<Suspense fallback={null}>
-			{screens}
+			<group ref={group}>
+				{screens}
+			</group>
 		</Suspense>
 	</group>;
 

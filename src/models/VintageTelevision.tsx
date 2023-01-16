@@ -4,10 +4,10 @@ Command: npx gltfjsx@6.1.2 public/staging/vintageTelevision/vintageTelevision.gl
 */
 
 import { Group, Mesh, MeshStandardMaterial, MeshPhysicalMaterial, Scene, PerspectiveCamera, Vector3 } from 'three';
-import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
+import { Dispatch, ReactElement, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { useCursor, useFBO, useGLTF } from '@react-three/drei';
 import { GLTF } from 'three-stdlib';
-import { Quaternion } from "three";
+import { Quaternion, Object3D } from "three";
 
 import { gsap } from "gsap";
 import { useSceneMaterial } from "../../public/shaders/scene/index";
@@ -30,10 +30,13 @@ type GLTFResult = GLTF & {
 
 type VintageTelevisionProps = {
   intensity?: number,
+	playlistID?: string,
   route?: string,
   url?: string,
   index?: number,
-  children?: ReactElement[]
+  children?: ReactElement[],
+	focusedPlaylist?: string,
+	setFocusPlaylistID?: Dispatch<SetStateAction<string>>
 } & JSX.IntrinsicElements['group']
 
 const glassMat = new MeshPhysicalMaterial( { roughness: 0, transmission: 1 } );
@@ -45,10 +48,10 @@ export default function Model( props: VintageTelevisionProps ) {
 	const router = useRouter();
 	const group = useRef<Group>( null );
 	const [ hovered, hover ] = useState( false );
-	const [ focused, setFocus ] = useState( false );
+	const dummyCamera = useRef( new Object3D() );
 	const worldPosition = useRef( new Vector3() );
 	const worldQuaternion = useRef( new Quaternion() );
-	const { url = URL_NOT_FOUND, route, index = 0, intensity = 200, children, ...restProps } = props;
+	const { url = URL_NOT_FOUND, playlistID, focusedPlaylist, setFocusPlaylistID, index = 0, intensity = 200, children, ...restProps } = props;
 	const { nodes, materials } = useGLTF( FILE_URL ) as unknown as GLTFResult;
 
 	useCursor( hovered );
@@ -59,20 +62,26 @@ export default function Model( props: VintageTelevisionProps ) {
 	const cameraInit = useRef( false );
 	const [ activeScene, present, setFuture, setActiveScene, paneSettings, sceneImmersion, sceneReversion ] = useClientStore( state => [ state.activeScene, state.present, state.setFuture, state.setActiveScene, state.paneSettings, state.sceneImmersion, state.sceneReversion ] );
 	// The portal will render into this scene
-	const [ scene ] = useState( () => new Scene() );
+	const [ futureScene ] = useState( () => new Scene() );
 	// We have our own camera in here, separate from the default
-	const [ camera ] = useState( () => new PerspectiveCamera( 50, 1, 0.1, 1000 ) );
-	const cameraRig = useRef( new CameraRig( camera, scene ) );
+	const [ futureCamera ] = useState( () => new PerspectiveCamera( 50, 1, 0.1, 1000 ) );
+	const cameraRig = useRef( new CameraRig( futureCamera, futureScene ) );
 	const tvMat = useSceneMaterial( {
 		url: url,
 		intensity: intensity,
 		renderedScene: children ? fbo.current.texture : undefined
 	} );
 
+	if ( focusedPlaylist !== playlistID ) {
+
+		tvMat.uniforms.altScene.value = 0;
+
+	}
+
 	useEffect( () => {
 
-		camera.aspect = 0.5 / 0.42;
-		camera.updateProjectionMatrix();
+		futureCamera.aspect = 0.5 / 0.42;
+		futureCamera.updateProjectionMatrix();
 
 		if ( group.current ) {
 
@@ -92,25 +101,19 @@ export default function Model( props: VintageTelevisionProps ) {
 		// Copy the default cameras whereabouts
 		if ( ! cameraInit.current ) {
 
-			camera.position.copy( state.camera.position );
-			camera.rotation.copy( state.camera.rotation );
-			camera.scale.copy( state.camera.scale );
+			futureCamera.position.copy( state.camera.position );
+			futureCamera.rotation.copy( state.camera.rotation );
+			futureCamera.scale.copy( state.camera.scale );
+			dummyCamera.current.position.copy( state.camera.position );
+			dummyCamera.current.rotation.copy( state.camera.rotation );
+			dummyCamera.current.scale.copy( state.camera.scale );
+			dummyCamera.current.lookAt( new Vector3() );
 			cameraInit.current = true;
 
 		}
 
-		if ( hovered ) {
-
-			tvMat.uniforms.altScene.value = 1;
-
-		} else {
-
-			tvMat.uniforms.altScene.value = 0;
-
-		}
-
 		state.gl.setRenderTarget( fbo.current );
-		state.gl.render( scene, camera );
+		state.gl.render( futureScene, futureCamera );
 		state.gl.setRenderTarget( null );
 
 		tvMat.uniforms.time.value = state.clock.getElapsedTime() / 2;
@@ -128,18 +131,18 @@ export default function Model( props: VintageTelevisionProps ) {
 		if ( ! intersection ) return false;
 		// We take that hits uv coords, set up this layers raycaster, et voilà, we have raycasting with perspective shift
 		const uv = intersection.uv;
-		state.raycaster.setFromCamera( state.pointer.set( uv.x * 2 - 1, uv.y * 2 - 1 ), camera );
+		state.raycaster.setFromCamera( state.pointer.set( uv.x * 2 - 1, uv.y * 2 - 1 ), futureCamera );
 
 	}, [] );
 
 	const handleClick = ( e ) => {
 
 		// e.preventDefault();
-		if ( ! present || activeScene === 2 ) return;
+		if ( ! present || ! group.current || activeScene === 2 ) return;
 		if ( ! worldPosition.current || ! worldQuaternion.current ) return;
-		if ( focused ) {
+		if ( focusedPlaylist === playlistID ) {
 
-			present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
+			present.rig.flyTo( group.current.position, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
 			sceneImmersion();
 			setTimeout( () => {
 
@@ -149,8 +152,10 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		}
 
-		setFocus( true );
-		setFuture( fbo.current, scene, camera, cameraRig.current );
+		tvMat.uniforms.altScene.value = 1;
+		setFocusPlaylistID && setFocusPlaylistID( playlistID ?? "" );
+		// tvMat.uniforms.altScene.value = 1;
+		setFuture( fbo.current, futureScene, futureCamera, cameraRig.current );
 		present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
 
 
@@ -183,9 +188,10 @@ export default function Model( props: VintageTelevisionProps ) {
 					<mesh ref={screen} material={tvMat} position={[ - 0.085, 0.2525, 0.15 ]}>
 						<planeGeometry args={[ 0.5, 0.42 ]}/>
 					</mesh>
-					{children && createPortal( children, scene, {
-						camera,
-						scene,
+					{children && createPortal( children, futureScene, {
+						// @ts-ignore
+						futureCamera,
+						futureScene,
 						gl,
 						events: { compute, priority: events.priority - 1 }
 					} )}

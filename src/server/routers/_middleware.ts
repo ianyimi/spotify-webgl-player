@@ -6,8 +6,7 @@ export const isAuthorized = middleware( ( { next, ctx } ) => {
 	// REFRESH ACCESS TOKEN HERE
 	if ( ctx?.session?.error === "ResfreshAccessTokenError" ) {
 
-		console.log( "expired token" );
-		// signIn( "spotify", { callbackUrl: "/" } );
+		signIn( "spotify", { callbackUrl: "/" } );
 
 	}
 

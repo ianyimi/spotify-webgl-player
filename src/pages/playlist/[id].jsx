@@ -2,12 +2,13 @@ import dynamic from "next/dynamic";
 import { trpc } from "../../utils/trpc";
 
 const VintageTelevision = dynamic( () => import( "@/models/VintageTelevision.tsx" ), { ssr: false } );
+const demoUrl = "0KQGeTlSOr3vtLDRChS1FQ";
 
 export default function Playlist() {
 
 	const trackNames = [];
 
-	const { data } = trpc.fetchPlaylistData.useQuery( { id: "14d2JKBEDa3E0sr7idL3zZ" } );
+	const { data } = trpc.fetchPlaylistData.useQuery( { id: demoUrl } );
 
 	if ( ! data ) return <div>loading...</div>;
 
@@ -28,7 +29,7 @@ export default function Playlist() {
 
 Playlist.canvas = () => {
 
-	const { data } = trpc.fetchPlaylistData.useQuery( { id: "14d2JKBEDa3E0sr7idL3zZ" } );
+	const { data } = trpc.fetchPlaylistData.useQuery( { id: demoUrl } );
 
 	if ( ! data ) {
 
@@ -40,8 +41,6 @@ Playlist.canvas = () => {
 		</group>;
 
 	}
-
-	console.log( data.items );
 
 	return <group>
 		<VintageTelevision url={data.imageUrl} route={"/"}/>

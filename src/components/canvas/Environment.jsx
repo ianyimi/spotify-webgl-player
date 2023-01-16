@@ -1,14 +1,15 @@
 import { MeshReflectorMaterial } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { Vector3 } from "three";
-import { useEffect, useMemo } from "react";
+import { Vector3, Object3D } from "three";
+import { useEffect, useRef, useMemo } from "react";
 import usePostProcess from "@/templates/hooks/usePostprocess";
 import { useClientStore } from "@/hooks/useStore";
-import { CameraRig } from "three-story-controls";
+import { CameraRig, CameraAction } from "three-story-controls";
 
 export default function Environment( props ) {
 
 	const { scene, camera, gl } = useThree();
+	const dummyCamera = useRef( new Object3D() );
 	const [ present, setPresent, setActiveScene ] = useClientStore( state => [ state.present, state.setPresent, state.setActiveScene ] );
 	const rig = useMemo( () => {
 
@@ -19,13 +20,15 @@ export default function Environment( props ) {
 	usePostProcess();
 	useEffect( () => {
 
-		camera && camera.lookAt( 0, 0, 0 );
+		// camera && camera.lookAt( 0, 0, 0 );
 
 		const { position, quaternion } = rig.getWorldCoordinates();
 		rig.flyTo( new Vector3( 0, 5, 20 ), quaternion, 0 );
+		// rig.do( CameraAction.Tilt, - Math.PI / 2 );
+		console.log( "sp" );
 		setPresent( gl, scene, camera, rig );
 
-	}, [] );
+	}, [ camera, scene, rig, gl, setPresent ] );
 
 	// const { quaternion } = rig.getWorldCoordinates();
 	// rig.flyTo( new Vector3( 0, 1, 20 ), quaternion, 0 );

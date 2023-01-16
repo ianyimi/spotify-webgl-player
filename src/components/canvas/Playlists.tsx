@@ -1,6 +1,6 @@
 import VintageTelevision from "@/models/VintageTelevision";
 // import { ScrollState } from "@/templates/Scroll";
-import { useRef, Suspense, ReactElement } from "react";
+import { useRef, useState, Suspense, ReactElement } from "react";
 import { Group } from "three";
 import { useFrame, GroupProps } from "@react-three/fiber";
 import PortalScene from "./PortalScene/index";
@@ -19,6 +19,7 @@ export default function Playlists( props: PlaylistsProps ) {
 	const group = useRef<Group>( null );
 	const { playlists, rowLength } = props;
 	const screens: ReactElement[] = [];
+	const [ focusedPlaylist, setFocusPlaylistID ] = useState( "" );
 
 	// for ( let z = 0, i = 0; z < Math.floor( playlists.length / rowLength ); z ++ ) {
 
@@ -36,11 +37,14 @@ export default function Playlists( props: PlaylistsProps ) {
 				screens.push(
 					<VintageTelevision
 						key={playlist.id}
+						playlistID={playlist.id}
 						route={`/playlist/${playlist.id}`}
 						position-x={5 * x}
 						position-z={7 * z}
 						url={playlist?.images[ 0 ]?.url ?? ERROR_IMAGE_URL}
 						intensity={100}
+						focusedPlaylist={focusedPlaylist}
+						setFocusPlaylistID={setFocusPlaylistID}
 					>
 						{/* @ts-ignore */}
 						<PortalScene/>

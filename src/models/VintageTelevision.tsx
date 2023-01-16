@@ -155,7 +155,6 @@ export default function Model( props: VintageTelevisionProps ) {
 
 		tvMat.uniforms.altScene.value = 1;
 		setFocusPlaylistID && setFocusPlaylistID( playlistID ?? "" );
-		// tvMat.uniforms.altScene.value = 1;
 		setFuture( fbo.current, futureScene, futureCamera, cameraRig.current );
 		present.rig.flyTo( worldPosition.current, worldQuaternion.current, AnimationDuration.CameraMotion, AnimationEase.CubicBezier );
 
@@ -164,10 +163,6 @@ export default function Model( props: VintageTelevisionProps ) {
 
 	return (
 		<group ref={group} {...restProps} dispose={null}>
-			{/* <mesh position={[ 0, 1.25, 2 ]}>
-				<boxBufferGeometry args={[ 1.25, 1.25, 1.25 ]} />
-				<meshBasicMaterial color="red" />
-			</mesh> */}
 			<group
 				name="Scene"
 				onClick={( e ) => handleClick( e )}

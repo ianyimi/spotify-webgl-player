@@ -189,10 +189,9 @@ export default function Model( props: VintageTelevisionProps ) {
 						<planeGeometry args={[ 0.5, 0.42 ]}/>
 					</mesh>
 					{children && createPortal( children, futureScene, {
-						// @ts-ignore
-						futureCamera,
-						futureScene,
 						gl,
+						camera: futureCamera,
+						scene: futureScene,
 						events: { compute, priority: events.priority - 1 }
 					} )}
 				</mesh>

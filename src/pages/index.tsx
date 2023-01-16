@@ -47,11 +47,13 @@ Page.canvas = () => {
 
 	}
 
+	console.log( data.playlists );
+
 	return (
 		<group>
 			<Environment/>
 			{/* @ts-ignore */}
-			{data && <Playlists playlists={data.playlists} rowLength={5} position-y={- 1}/>}
+			{data && <Playlists playlists={data.playlists} total={data.total} rowLength={5} position-y={- 1}/>}
 			<mesh position-z={2.5}>
 				<boxGeometry args={[ 1, 1 ]}/>
 				<meshStandardMaterial color="green"/>

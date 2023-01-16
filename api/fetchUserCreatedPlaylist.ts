@@ -24,7 +24,7 @@ export async function fetchUserCreatedPlaylists( api: SpotifyApi ): Promise<User
 
 		for ( let i = 50; i < body.total; i += 50 ) {
 
-			const { body: { items: nextPagePlaylists } } = await api.getUserPlaylists( id, { ...config, offset: i * 50 } );
+			const { body: { items: nextPagePlaylists } } = await api.getUserPlaylists( id, { ...config, offset: i } );
 			nextPagePlaylists.forEach( p => {
 
 				if ( p.owner.id === id ) {
